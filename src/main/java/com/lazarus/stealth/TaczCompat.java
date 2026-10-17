@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-// TaCZ shots: Extreme noise when unsilenced (64), High when silenced (16); both alert nearby infected to the shot.
+// TaCZ shots: unsilenced = Extreme (64 blocks, alerts); silenced = Low (16 blocks, infected only investigate the spot).
 // Ranges mirror kubejs lazarus_gunshot_noise.js (64 / 16 silenced), which keeps sending zombies there; our
 // investigate goal keeps any path that already ends near the shot, so the two do not fight.
 // Registered only when TaCZ is loaded.
@@ -17,9 +17,11 @@ final class TaczCompat {
     @SubscribeEvent
     public static void onFire(GunFireEvent event) {
         if (!event.getLogicalSide().isServer() || !(event.getShooter() instanceof ServerPlayer player) || !Perception.eligible(player)) return;
-        double radius = silenced(event.getGunItemStack()) ? StealthConfig.SILENCED_GUN_RADIUS.get() : StealthConfig.LOUD_GUN_RADIUS.get();
+        boolean silenced = silenced(event.getGunItemStack());
+        double radius = silenced ? StealthConfig.SILENCED_GUN_RADIUS.get() : StealthConfig.LOUD_GUN_RADIUS.get();
         if (player.getTags().contains("lazarus_disciplina")) radius *= 0.75; // same Combat perk as the script
-        Noise.emit(new Noise.Event(player.serverLevel(), player.position(), Math.max(radius, StealthMath.HIGH_RADIUS), player, true, "gunshot"));
+        Noise.emit(new Noise.Event(player.serverLevel(), player.position(), radius, player, true, "gunshot",
+                silenced ? StealthMath.LOW : StealthMath.EXTREME));
     }
 
     static boolean silenced(ItemStack stack) {

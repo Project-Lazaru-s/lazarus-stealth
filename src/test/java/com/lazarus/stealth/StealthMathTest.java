@@ -51,9 +51,9 @@ public final class StealthMathTest {
         assert footstepRadius(8, 0.01, false, 0, 0, 0.6, 0) >= 8 * 0.15 - 1e-9;
         assert footstepRadius(8, 4, false, 2, 5, 0, 0) <= 8 * 2.5 + 1e-9;
 
-        // Extreme is reserved for gunshots: unsilenced 64 (48 with Disciplina) is Extreme, silenced 16 is High,
+        // Extreme is reserved for gunshots: unsilenced 64 (48 with Disciplina) is Extreme (silenced shots are forced Low),
         // and no footstep can get there even sprinting on glass, overloaded and exhausted (cap 2.5x).
-        assert noiseClass(64) == EXTREME && noiseClass(48) == EXTREME && noiseClass(16) == HIGH;
+        assert noiseClass(64) == EXTREME && noiseClass(48) == EXTREME;
         assert noiseClass(footstepRadius(14, 1.7, true, 2, 5, 0, 0)) == HIGH;
         assert noiseClass(18) == HIGH : "glass break";
 

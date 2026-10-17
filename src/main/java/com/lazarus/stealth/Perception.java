@@ -393,7 +393,7 @@ public final class Perception {
     static void hear(Mob mob, Noise.Event noise, long now) {
         if (mob.getTarget() != null) return;
         Mind m = mind(mob);
-        int cls = StealthMath.noiseClass(noise.radius());
+        int cls = noise.cls();
         if (!m.hasLead(now) || cls >= m.leadClass) {
             double speed = cls == StealthMath.LOW ? 0.9 : cls == StealthMath.MEDIUM ? 1.05 : 1.2;
             UUID cause = noise.source() == null ? null : noise.source().getUUID();

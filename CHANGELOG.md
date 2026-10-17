@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.1.2 — 2026-10-17
+
+- Tiro com silenciador passa a ser ruído **Baixo** (antes Alto): zumbis até 16 blocos só investigam o ponto do tiro.
+
 ## 0.1.1 — 2026-10-17
 
-- Novo nível de ruído **Extremo** (alcance de 40 blocos ou mais), reservado aos tiros do TaCZ sem silenciador. Tiro silenciado continua **Alto**. Nenhum passo alcança Extremo, e o alcance e a reação dos zumbis não mudaram: o nível só separa, no indicador e na prioridade das pistas, o tiro da corrida em metal ou vidro.
+- Novo nível de ruído **Extremo** (alcance de 40 blocos ou mais), reservado aos tiros do TaCZ sem silenciador. Tiro silenciado agora é **Baixo**: zumbis até 16 blocos investigam o ponto do tiro, sem entrar em Alerta. Nenhum passo alcança Extremo, e o alcance e a reação dos zumbis não mudaram: o nível só separa, no indicador e na prioridade das pistas, o tiro da corrida em metal ou vidro.
 - Indicador redesenhado: ícone de alto-falante com 0 a 4 ondas, semitransparente, no canto inferior esquerdo (`offsetLeft` 14 e `offsetBottom` 50 no config do cliente). Sem texto.
 
 ## 0.1.0 — 2026-10-17

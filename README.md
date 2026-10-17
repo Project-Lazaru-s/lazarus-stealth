@@ -53,7 +53,7 @@ Outras ações:
 - **Sem desconto de postura nem de habilidade:**
   - quebrar um bloco: 14 (o mesmo alcance do Dual Hitbox);
   - quebrar vidro: 18;
-  - tiro do TaCZ: 64 (**Extremo**), ou 16 com silenciador (**Alto**); o chamado dos zumbis continua com o script `lazarus_gunshot_noise.js`.
+  - tiro do TaCZ: 64 (**Extremo**, deixa os zumbis em Alerta), ou 16 com silenciador (**Baixo**: os zumbis no alcance só investigam o ponto do tiro); o chamado dos zumbis continua com o script `lazarus_gunshot_noise.js`.
 - **Pela metade se você estiver agachado:**
   - portas, alçapões e portões: 6;
   - abrir contêiner: 4;
@@ -155,7 +155,7 @@ O protocolo já envia um estado agregado (**Investigando / Perseguindo**) para u
 | **Zombie Awareness 1.13.1** | Seu alvo por visão (16 blocos, linha de visão sem cone) passa por `Mob.setTarget` → `LivingChangeTargetEvent`, que o mod recusa enquanto o par não está Perseguindo. Também é desfeito o caminho até o jogador que o ZA inicia logo antes de dar o alvo. Som, cheiro, luz e hordas errantes do ZA continuam. Nenhuma configuração do ZA foi alterada. |
 | **Dual Hitbox Zombies 1.0.0** | A atração por barulho (`setTarget(player)` ao quebrar blocos ou lutar) é recusada e substituída por uma pista até o ponto do som. Zumbis sem cabeça ficam com a regra do próprio DHZ. A finalização usa `ZombieCombatEvents.applyHeadDamage`. Isca e jarra de cérebro (que só limpam o alvo) não são afetadas. |
 | **Smart Moving Reborn 1.0.0** | A postura vem do estado real no servidor: o SMR põe o jogador em `Pose.SWIMMING` ao rastejar, inclusive no rastejar forçado em vãos de 1 bloco. Agachar vem de `Pose.CROUCHING`. A tecla não é lida. |
-| **TaCZ 1.1.8** | `GunFireEvent`: tiro **Extremo** no indicador (**Alto** com silenciador) e infectados no alcance (64 ou 16) entram em Alerta com pista no ponto do tiro. O script `lazarus_gunshot_noise.js` continua dono do chamado, e caminhos que já terminam perto do tiro são mantidos. |
+| **TaCZ 1.1.8** | `GunFireEvent`: tiro **Extremo** no indicador, com infectados em Alerta até 64 blocos; com silenciador é **Baixo** e os infectados até 16 blocos só investigam o ponto do tiro. O script `lazarus_gunshot_noise.js` continua dono do chamado, e caminhos que já terminam perto do tiro são mantidos. |
 | **Puffish Skills 0.19.2** | Categoria `furtividade`, atributos como recompensa e XP por comando. |
 | **PeakStamina 2.2.2** | Lê e gasta `StaminaCapability.stamina`. |
 | **Encumbered 0.99** | `WeightEvent.calculateWeight` ÷ `getWeightWithBoostItem(player, 1)` (capacidade efetiva com itens de bônus e encantamento). |

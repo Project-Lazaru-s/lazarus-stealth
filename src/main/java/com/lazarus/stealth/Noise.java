@@ -27,7 +27,12 @@ import java.util.List;
 // routed to nearby infected as a lead to the noise position (never as a target).
 @Mod.EventBusSubscriber(modid = LazarusStealth.ID)
 public final class Noise {
-    public record Event(ServerLevel level, Vec3 pos, double radius, ServerPlayer source, boolean route, String kind) {}
+    // cls is the noise class shown on the HUD and used by hearing; by default it follows the radius.
+    public record Event(ServerLevel level, Vec3 pos, double radius, ServerPlayer source, boolean route, String kind, int cls) {
+        public Event(ServerLevel level, Vec3 pos, double radius, ServerPlayer source, boolean route, String kind) {
+            this(level, pos, radius, source, route, kind, StealthMath.noiseClass(radius));
+        }
+    }
 
     private static final double STRIDE = 1.6;
     private static final int HUD_HOLD_TICKS = 30, HUD_STEP_TICKS = 20;
@@ -35,7 +40,7 @@ public final class Noise {
     private Noise() {}
 
     public static void emit(Event e) {
-        int cls = StealthMath.noiseClass(e.radius());
+        int cls = e.cls();
         if (cls == StealthMath.NONE) return;
         long now = e.level().getGameTime();
         if (e.source() != null) {
