@@ -1,0 +1,33 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#minecraft:swords",
+      "required": false
+    },
+    {
+      "id": "#minecraft:axes",
+      "required": false
+    },
+    {
+      "id": "#forge:tools/knives",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:crowbar",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:baseball_bat",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:cricket_bat",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:ballpeen_hammer",
+      "required": false
+    }
+  ]
+}

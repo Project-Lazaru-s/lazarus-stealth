@@ -1,0 +1,114 @@
+{
+  "passos_leves": {
+    "title": "Passos Leves",
+    "description": "Seus passos alcançam 30% menos longe. Não abafa tiros, mineração nem vidro quebrado.",
+    "icon": {
+      "type": "item",
+      "data": {
+        "item": "minecraft:leather_boots"
+      }
+    },
+    "frame": {
+      "type": "advancement",
+      "data": {
+        "frame": "goal"
+      }
+    },
+    "rewards": [
+      {
+        "type": "puffish_skills:attribute",
+        "data": {
+          "attribute": "lazarusstealth:footstep_reduction",
+          "value": 0.3,
+          "operation": "addition"
+        }
+      }
+    ]
+  },
+  "corpo_baixo": {
+    "title": "Corpo Baixo",
+    "description": "Agachado ou rastejando, os infectados demoram 40% mais para notar você (12% em pé).",
+    "icon": {
+      "type": "item",
+      "data": {
+        "item": "minecraft:black_wool"
+      }
+    },
+    "frame": {
+      "type": "advancement",
+      "data": {
+        "frame": "task"
+      }
+    },
+    "rewards": [
+      {
+        "type": "puffish_skills:attribute",
+        "data": {
+          "attribute": "lazarusstealth:visual_stealth",
+          "value": 0.4,
+          "operation": "addition"
+        }
+      }
+    ]
+  },
+  "leitura_de_rotas": {
+    "title": "Leitura de Rotas",
+    "description": "Peso e exaustão pesam metade nos seus passos; o ruído extra de metal e vidro cai 25%. Passos alcançam mais 10% menos.",
+    "icon": {
+      "type": "item",
+      "data": {
+        "item": "minecraft:map"
+      }
+    },
+    "frame": {
+      "type": "advancement",
+      "data": {
+        "frame": "task"
+      }
+    },
+    "rewards": [
+      {
+        "type": "puffish_skills:attribute",
+        "data": {
+          "attribute": "lazarusstealth:burden_control",
+          "value": 0.5,
+          "operation": "addition"
+        }
+      },
+      {
+        "type": "puffish_skills:attribute",
+        "data": {
+          "attribute": "lazarusstealth:footstep_reduction",
+          "value": 0.1,
+          "operation": "addition"
+        }
+      }
+    ]
+  },
+  "finalizador": {
+    "title": "Finalizador",
+    "description": "Finalização furtiva gasta 40% menos fôlego, recarrega 40% mais rápido, vale em ângulo mais aberto e fere mais os especiais.",
+    "icon": {
+      "type": "item",
+      "data": {
+        "item": "minecraft:iron_sword"
+      }
+    },
+    "frame": {
+      "type": "advancement",
+      "data": {
+        "frame": "challenge"
+      }
+    },
+    "rewards": [
+      {
+        "type": "puffish_skills:attribute",
+        "data": {
+          "attribute": "lazarusstealth:finisher_mastery",
+          "value": 1,
+          "operation": "addition"
+        }
+      }
+    ]
+  }
+}

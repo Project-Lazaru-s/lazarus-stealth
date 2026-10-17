@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:dirt",
+    "minecraft:grass_block",
+    "minecraft:podzol",
+    "minecraft:mycelium",
+    "minecraft:farmland",
+    "minecraft:dirt_path",
+    "#minecraft:leaves",
+    "#minecraft:wool",
+    "#minecraft:wool_carpets",
+    "#minecraft:sand",
+    "minecraft:snow",
+    "minecraft:snow_block",
+    "minecraft:powder_snow",
+    "minecraft:moss_block",
+    "minecraft:moss_carpet",
+    "minecraft:hay_block",
+    "minecraft:clay",
+    "minecraft:mud",
+    "minecraft:soul_soil",
+    "#minecraft:beds",
+    {
+      "id": "#minecraft:replaceable_by_trees",
+      "required": false
+    }
+  ]
+}

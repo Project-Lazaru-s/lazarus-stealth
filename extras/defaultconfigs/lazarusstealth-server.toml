@@ -1,0 +1,130 @@
+#Log every perception transition (very verbose).
+debugLog = false
+
+[perception]
+	#Master switch. Off = zombies use their normal targeting again.
+	enabled = true
+	#Ticks between vision checks for each player (staggered per player).
+	#Range: 2 ~ 20
+	sampleTicks = 6
+	#Nearest infected checked per player per sample.
+	#Range: 4 ~ 256
+	maxMobsPerPlayer = 48
+	#Blocks; nothing is seen beyond this.
+	#Range: 4.0 ~ 64.0
+	sightRange = 24.0
+	#Full angle (degrees) of the fast frontal cone.
+	#Range: 30.0 ~ 180.0
+	frontConeDegrees = 110.0
+	#Full angle of slow peripheral vision; behind it nothing is seen.
+	#Range: 60.0 ~ 360.0
+	peripheralConeDegrees = 200.0
+	#Suspicion per second at ideal exposure (1.0 suspicion = discovered).
+	#Range: 0.1 ~ 20.0
+	detectionRate = 2.5
+	#Suspicion lost per second while nothing is seen.
+	#Range: 0.01 ~ 2.0
+	suspicionDecay = 0.12
+	#Closer than this (blocks, horizontal) = discovered by touch.
+	#Range: 0.5 ~ 3.0
+	contactDistance = 1.2
+	#Vision speed multiplier for zombies already alerted or searching.
+	#Range: 1.0 ~ 10.0
+	alertVisionMultiplier = 2.5
+	#After losing its target, seconds spent going to the last known position.
+	#Range: 1 ~ 60
+	memorySeconds = 6
+	#Seconds of local search after arriving at a lead.
+	#Range: 1 ~ 60
+	searchSeconds = 8
+	#Seconds a noise lead stays valid.
+	#Range: 2 ~ 120
+	investigateSeconds = 15
+
+[noise]
+	#Walking footstep radius (blocks) on #lazarusstealth:surface_soft (grass, dirt, leaves...).
+	#Range: 0.0 ~ 64.0
+	softRadius = 5.0
+	#Walking footstep radius on anything not tagged (wood, stone, concrete, asphalt).
+	#Range: 0.0 ~ 64.0
+	mediumRadius = 8.0
+	#Walking footstep radius on #lazarusstealth:surface_metal.
+	#Range: 0.0 ~ 64.0
+	metalRadius = 12.0
+	#Footstep radius on #lazarusstealth:surface_glass; posture does not reduce it.
+	#Range: 0.0 ~ 64.0
+	glassRadius = 14.0
+	#Range: 0.0 ~ 2.0
+	crouchMultiplier = 0.4
+	#Range: 0.0 ~ 2.0
+	crawlMultiplier = 0.3
+	#Range: 0.0 ~ 4.0
+	sprintMultiplier = 1.7
+	#Breaking a block (no posture or skill discount). Matches Dual Hitbox noiseAttractionRange.
+	#Range: 0.0 ~ 64.0
+	blockBreakRadius = 14.0
+	#Breaking glass (#forge:glass, #forge:glass_panes, surface_glass).
+	#Range: 0.0 ~ 64.0
+	glassBreakRadius = 18.0
+	#Melee hit on a living entity.
+	#Range: 0.0 ~ 64.0
+	meleeRadius = 8.0
+	#Opening/closing doors, trapdoors and gates (halved while crouching).
+	#Range: 0.0 ~ 64.0
+	doorRadius = 6.0
+	#Opening a container (halved while crouching).
+	#Range: 0.0 ~ 64.0
+	containerRadius = 4.0
+	#Picking up items (halved while crouching).
+	#Range: 0.0 ~ 64.0
+	pickupRadius = 2.0
+	#TaCZ shot, only for the HUD/alert state; attraction stays with kubejs lazarus_gunshot_noise.js.
+	#Range: 0.0 ~ 256.0
+	loudGunRadius = 64.0
+	#Range: 0.0 ~ 256.0
+	silencedGunRadius = 16.0
+	#Radius multiplier when a solid block lies between the noise and the zombie.
+	#Range: 0.1 ~ 1.0
+	occlusionMultiplier = 0.6
+	#Nearest infected that react to one noise.
+	#Range: 1 ~ 64
+	maxMobsPerNoise = 10
+
+[finisher]
+	enabled = true
+	#PeakStamina cost (ignored without PeakStamina).
+	#Range: 0.0 ~ 100.0
+	staminaCost = 15.0
+	#Seconds between takedowns per player.
+	#Range: 0 ~ 120
+	cooldownSeconds = 6
+	#Minimum angle (degrees) between the zombie's view and the attacker: 180 = straight behind.
+	#Range: 0.0 ~ 180.0
+	minAngle = 100.0
+	#Minimum angle with the Finalizador skill.
+	#Range: 0.0 ~ 180.0
+	masteryMinAngle = 80.0
+	#Specials take at least this fraction of max health instead of dying.
+	#Range: 0.0 ~ 1.0
+	specialCritFraction = 0.35
+	#Infected with more max health than this are treated as specials even if untagged.
+	#Range: 1.0 ~ 10000.0
+	specialHealthThreshold = 40.0
+	#Minimum attack charge (0..1).
+	#Range: 0.0 ~ 1.0
+	minAttackCharge = 0.9
+
+[xp]
+	enabled = true
+	#Max Sneak XP per in-game day per player.
+	#Range: 0 ~ 10000
+	dailyCap = 60
+	#The same zombie gives XP again only after this many real minutes.
+	#Range: 0 ~ 1440
+	mobCooldownMinutes = 10
+	#Max rewards per 16x16 area every 5 minutes.
+	#Range: 1 ~ 100
+	rewardsPerArea = 3
+	#Allow XP from /summon'ed zombies (spawner and spawn egg zombies never give XP).
+	xpFromCommandSpawns = false
+

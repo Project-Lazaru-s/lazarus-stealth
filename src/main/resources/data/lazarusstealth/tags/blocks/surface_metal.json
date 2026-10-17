@@ -1,0 +1,394 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:iron_block",
+    "minecraft:iron_bars",
+    "minecraft:iron_door",
+    "minecraft:iron_trapdoor",
+    "minecraft:chain",
+    "#minecraft:anvil",
+    "minecraft:hopper",
+    "minecraft:cauldron",
+    "minecraft:heavy_weighted_pressure_plate",
+    "minecraft:light_weighted_pressure_plate",
+    "minecraft:copper_block",
+    "minecraft:exposed_copper",
+    "minecraft:weathered_copper",
+    "minecraft:oxidized_copper",
+    "minecraft:cut_copper",
+    "minecraft:exposed_cut_copper",
+    "minecraft:weathered_cut_copper",
+    "minecraft:oxidized_cut_copper",
+    "minecraft:cut_copper_slab",
+    "minecraft:cut_copper_stairs",
+    "minecraft:waxed_copper_block",
+    "minecraft:waxed_cut_copper",
+    "minecraft:netherite_block",
+    "minecraft:gold_block",
+    "minecraft:lightning_rod",
+    {
+      "id": "#forge:storage_blocks/iron",
+      "required": false
+    },
+    {
+      "id": "#forge:storage_blocks/copper",
+      "required": false
+    },
+    {
+      "id": "#forge:storage_blocks/steel",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:iron_grid",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:iron_grid_door",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:iron_ladder",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:iron_locker",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:iron_plate",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:iron_window",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:ironcrate",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:metal_bars",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:metal_shelvels_two",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:metal_shelves",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:metal_shelves_three",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:metalshelvesfive",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:metalshelvesone",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:scrap_metal_block",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:vent",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:vent_entrance",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:vent_turn",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:ventblock",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:ventcover",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:cut_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:cut_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:cut_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:plate_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:plate_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:plate_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:exposed_cut_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:exposed_cut_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:exposed_cut_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:exposed_plate_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:exposed_plate_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:exposed_plate_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:exposed_iron_bars",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:exposed_iron_door",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:exposed_iron_trapdoor",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:weathered_cut_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:weathered_cut_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:weathered_cut_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:weathered_plate_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:weathered_plate_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:weathered_plate_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:weathered_iron_bars",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:weathered_iron_door",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:weathered_iron_trapdoor",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:rusted_cut_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:rusted_cut_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:rusted_cut_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:rusted_plate_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:rusted_plate_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:rusted_plate_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:rusted_iron_bars",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:rusted_iron_door",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:rusted_iron_trapdoor",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_cut_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_cut_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_cut_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_plate_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_plate_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_plate_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_iron_bars",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_iron_door",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_iron_trapdoor",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_exposed_cut_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_exposed_cut_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_exposed_cut_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_exposed_plate_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_exposed_plate_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_exposed_plate_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_exposed_iron_bars",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_exposed_iron_door",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_exposed_iron_trapdoor",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_weathered_cut_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_weathered_cut_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_weathered_cut_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_weathered_plate_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_weathered_plate_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_weathered_plate_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_weathered_iron_bars",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_weathered_iron_door",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_weathered_iron_trapdoor",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_rusted_cut_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_rusted_cut_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_rusted_cut_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_rusted_plate_iron",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_rusted_plate_iron_slab",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_rusted_plate_iron_stairs",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_rusted_iron_bars",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_rusted_iron_door",
+      "required": false
+    },
+    {
+      "id": "immersive_weathering:waxed_rusted_iron_trapdoor",
+      "required": false
+    }
+  ]
+}

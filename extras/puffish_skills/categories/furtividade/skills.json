@@ -1,0 +1,23 @@
+{
+  "passos_leves": {
+    "x": 0,
+    "y": 0,
+    "definition": "passos_leves",
+    "root": true
+  },
+  "corpo_baixo": {
+    "x": 0,
+    "y": 30,
+    "definition": "corpo_baixo"
+  },
+  "leitura_de_rotas": {
+    "x": 0,
+    "y": 60,
+    "definition": "leitura_de_rotas"
+  },
+  "finalizador": {
+    "x": 0,
+    "y": 90,
+    "definition": "finalizador"
+  }
+}

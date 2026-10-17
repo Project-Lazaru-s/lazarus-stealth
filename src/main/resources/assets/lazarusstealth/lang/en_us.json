@@ -1,0 +1,13 @@
+{
+  "lazarusstealth.noise.label": "Noise: %s",
+  "lazarusstealth.noise.0": "None",
+  "lazarusstealth.noise.1": "Low",
+  "lazarusstealth.noise.2": "Medium",
+  "lazarusstealth.noise.3": "High",
+  "lazarusstealth.finisher.success": "Silent takedown",
+  "lazarusstealth.finisher.special": "Critical sneak attack",
+  "attribute.name.lazarusstealth.footstep_reduction": "Quiet footsteps",
+  "attribute.name.lazarusstealth.visual_stealth": "Visual stealth",
+  "attribute.name.lazarusstealth.burden_control": "Burden control",
+  "attribute.name.lazarusstealth.finisher_mastery": "Takedown mastery"
+}

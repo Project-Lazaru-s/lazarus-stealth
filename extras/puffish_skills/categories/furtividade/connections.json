@@ -1,0 +1,18 @@
+{
+  "normal": {
+    "bidirectional": [
+      [
+        "passos_leves",
+        "corpo_baixo"
+      ],
+      [
+        "corpo_baixo",
+        "leitura_de_rotas"
+      ],
+      [
+        "leitura_de_rotas",
+        "finalizador"
+      ]
+    ]
+  }
+}

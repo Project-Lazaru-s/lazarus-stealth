@@ -1,0 +1,309 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:zombie",
+    "minecraft:husk",
+    "minecraft:zombie_villager",
+    "minecraft:drowned",
+    {
+      "id": "apocalypsenow:walker_1",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_2",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_3",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_4",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_5",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_6",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_7",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_8",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_9",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_10",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_11",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_12",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_13",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_14",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_15",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_16",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_17",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_18",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_19",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_20",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_21",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_22",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_23",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_24",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_25",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_26",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_27",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_28",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_29",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_30",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_31",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_32",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:walker_33",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_34",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_35",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_36",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_37",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_38",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_39",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_40",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_41",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_42",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_43",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_44",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_45",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_46",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_47",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_48",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_49",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_50",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_51",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_52",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_53",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_54",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_55",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_56",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:runner_57",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:crawler_1",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:crawler_2",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:crawler_3",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:crawler_4",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:horde_1",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:horde_2",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:horde_3",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:horde_4",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:horde_5",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:theheavy",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:bomber",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:thespitter",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:thesmoker",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:thehunter",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:sucker",
+      "required": false
+    },
+    {
+      "id": "hordes:zombie_player",
+      "required": false
+    },
+    {
+      "id": "hordes:husk_player",
+      "required": false
+    },
+    {
+      "id": "hordes:drowned_player",
+      "required": false
+    }
+  ]
+}

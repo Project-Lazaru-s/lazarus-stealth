@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:glass",
+    "#forge:glass_panes",
+    {
+      "id": "apocalypsenow:glass_spikes",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:glass_door",
+      "required": false
+    }
+  ]
+}

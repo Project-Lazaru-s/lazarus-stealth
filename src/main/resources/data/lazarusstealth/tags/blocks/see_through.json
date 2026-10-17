@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:glass",
+    "#forge:glass_panes",
+    "#minecraft:fences",
+    "#minecraft:fence_gates",
+    "minecraft:iron_bars",
+    "minecraft:chain",
+    "minecraft:scaffolding",
+    {
+      "id": "apocalypsenow:iron_grid",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:metal_bars",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:iron_window",
+      "required": false
+    }
+  ]
+}

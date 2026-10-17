@@ -1,0 +1,13 @@
+{
+  "lazarusstealth.noise.label": "Ruído: %s",
+  "lazarusstealth.noise.0": "Nenhum",
+  "lazarusstealth.noise.1": "Baixo",
+  "lazarusstealth.noise.2": "Médio",
+  "lazarusstealth.noise.3": "Alto",
+  "lazarusstealth.finisher.success": "Finalização furtiva",
+  "lazarusstealth.finisher.special": "Golpe furtivo crítico",
+  "attribute.name.lazarusstealth.footstep_reduction": "Passos silenciosos",
+  "attribute.name.lazarusstealth.visual_stealth": "Discrição visual",
+  "attribute.name.lazarusstealth.burden_control": "Controle de carga",
+  "attribute.name.lazarusstealth.finisher_mastery": "Maestria em finalização"
+}

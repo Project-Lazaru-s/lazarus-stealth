@@ -1,0 +1,30 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "undead_revamp2:theheavy",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:bomber",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:thespitter",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:thesmoker",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:thehunter",
+      "required": false
+    },
+    {
+      "id": "undead_revamp2:sucker",
+      "required": false
+    },
+    "minecraft:giant"
+  ]
+}

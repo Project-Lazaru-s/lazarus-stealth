@@ -1,0 +1,12 @@
+{
+  "title": "Furtividade",
+  "description": "Sobe ao passar perto de infectados sem ser perseguido, ao despistar investigações e com finalizações furtivas.",
+  "icon": {
+    "type": "item",
+    "data": {
+      "item": "minecraft:leather_boots"
+    }
+  },
+  "background": "textures/gui/advancements/backgrounds/stone.png",
+  "unlocked_by_default": true
+}
