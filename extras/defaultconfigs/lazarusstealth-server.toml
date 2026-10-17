@@ -128,3 +128,29 @@ debugLog = false
 	#Allow XP from /summon'ed zombies (spawner and spawn egg zombies never give XP).
 	xpFromCommandSpawns = false
 
+#Smarter perception for human NPCs (#lazarusstealth:human). Only humans that may be hostile to the
+#player use it (decided by Lazarus NPCs: looters, rogue soldiers, cannibals, faction enemies).
+[human]
+	#Range: 4.0 ~ 96.0
+	sightRange = 40.0
+	#Range: 30.0 ~ 180.0
+	frontConeDegrees = 140.0
+	#Range: 60.0 ~ 360.0
+	peripheralConeDegrees = 240.0
+	#Multiplier on perception.detectionRate.
+	#Range: 0.1 ~ 10.0
+	detectionMultiplier = 1.5
+	#Fraction still seen in total darkness (zombies: 0.2).
+	#Range: 0.0 ~ 1.0
+	darknessFloor = 0.35
+	#Range: 1.0 ~ 10.0
+	alertVisionMultiplier = 3.0
+	#Seconds a human remembers where it last saw the player.
+	#Range: 1 ~ 300
+	memorySeconds = 20
+	#Range: 1 ~ 300
+	searchSeconds = 20
+	#Allies within this radius are told where the player is when one spots or hears them.
+	#Range: 0.0 ~ 64.0
+	calloutRadius = 16.0
+

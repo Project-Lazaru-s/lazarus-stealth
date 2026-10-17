@@ -38,6 +38,7 @@ public final class IntegrationGameTests {
     // A player 8 blocks behind the husk must stay untargeted and the husk must not walk to him.
     @GameTest(template = "arena", batch = "int_za", timeoutTicks = 140)
     public static void zombieAwarenessSightIsGated(GameTestHelper h) {
+        TestArena.fresh(h);
         h.assertTrue(ModList.get().isLoaded("zombieawareness"), "Zombie Awareness not on the runtime");
         Husk husk = h.spawn(EntityType.HUSK, 16, FLOOR, 18);
         husk.goalSelector.removeAllGoals(g -> g instanceof RandomStrollGoal);
@@ -58,6 +59,7 @@ public final class IntegrationGameTests {
     // zombie goes to the block instead. Headless flag is read through the DHZ helper.
     @GameTest(template = "arena", batch = "int_dhz", timeoutTicks = 60)
     public static void dualHitboxBreakNoiseBecomesLead(GameTestHelper h) throws Exception {
+        TestArena.fresh(h);
         h.assertTrue(ModList.get().isLoaded("dualhitboxzombies"), "DHZ not on the runtime");
         Zombie zombie = h.spawn(EntityType.ZOMBIE, 16, FLOOR, 14);
         zombie.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
@@ -88,6 +90,7 @@ public final class IntegrationGameTests {
     // Encumbered, PeakStamina and Lazarus Moodles bridges return real values and change the footstep radius.
     @GameTest(template = "arena", batch = "int_bridges", timeoutTicks = 40)
     public static void weightStaminaExhaustionBridges(GameTestHelper h) {
+        TestArena.fresh(h);
         ServerPlayer p = player(h, 8, 8);
         PlayerState s = PlayerState.of(p);
         double light = Noise.footstepRadius(h.getLevel(), p, s);
@@ -115,6 +118,7 @@ public final class IntegrationGameTests {
     // Puffish Skills: XP command succeeds for furtividade, an unlocked skill applies its attribute, reset removes it.
     @GameTest(template = "arena", batch = "int_puffish", timeoutTicks = 40)
     public static void puffishTreeGrantsAndRevertsPerks(GameTestHelper h) {
+        TestArena.fresh(h);
         ServerPlayer p = player(h, 8, 8);
         var server = h.getLevel().getServer();
         var source = server.createCommandSourceStack().withPermission(4).withSuppressedOutput();
@@ -137,6 +141,7 @@ public final class IntegrationGameTests {
     // Apocalypse Now walkers are covered: they get the stealth goals and their direct targeting is gated.
     @GameTest(template = "arena", batch = "int_an", timeoutTicks = 40)
     public static void apocalypseNowWalkerIsCovered(GameTestHelper h) {
+        TestArena.fresh(h);
         @SuppressWarnings("unchecked")
         EntityType<Mob> type = (EntityType<Mob>) ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("apocalypsenow", "walker_1"));
         h.assertTrue(type != null, "apocalypsenow:walker_1 missing");
@@ -152,6 +157,7 @@ public final class IntegrationGameTests {
     // TaCZ: a real GunFireEvent (unsilenced) is Extreme noise on the HUD and alerts infected in range, never a target.
     @GameTest(template = "arena", batch = "int_tacz", timeoutTicks = 40)
     public static void gunshotIsHighNoiseAndAlerts(GameTestHelper h) {
+        TestArena.fresh(h);
         for (int x = 4; x < 28; x++) for (int y = 0; y < 4; y++) h.setBlock(x, FLOOR + y, 20, Blocks.STONE);
         Husk husk = h.spawn(EntityType.HUSK, 16, FLOOR, 8);
         ServerPlayer p = player(h, 16, 26);
@@ -184,6 +190,7 @@ public final class IntegrationGameTests {
 
     private static void finish(GameTestHelper h, ServerPlayer p) {
         h.getLevel().getServer().getPlayerList().remove(p);
+        h.killAllEntities(); // leftovers would see, hear and group with the next tests
         h.succeed();
     }
 }

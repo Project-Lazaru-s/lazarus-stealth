@@ -56,7 +56,8 @@ public final class Noise {
         double r = e.radius();
         List<Mob> mobs = e.level().getEntitiesOfClass(Mob.class,
                 new net.minecraft.world.phys.AABB(e.pos(), e.pos()).inflate(r, Math.max(4, r / 2), r),
-                m -> m.isAlive() && m.getTarget() == null && Perception.covered(m));
+                m -> m.isAlive() && m.getTarget() == null && Perception.covered(m)
+                        && (!Perception.human(m) || e.source() != null && Perception.engaged(m, e.source())));
         mobs.sort(Comparator.comparingDouble(m -> m.distanceToSqr(e.pos())));
         int max = StealthConfig.MAX_MOBS_PER_NOISE.get(), heard = 0;
         for (Mob mob : mobs) {

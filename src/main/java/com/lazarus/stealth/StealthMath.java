@@ -17,13 +17,21 @@ public final class StealthMath {
     public static double visualRate(double base, double dist, double range, double angle, double frontHalf,
                                     double peripheralHalf, double exposure, double light, boolean lightHeld,
                                     int posture, double speed, double visualSkill, double alertMult) {
+        return visualRate(base, dist, range, angle, frontHalf, peripheralHalf, exposure, light, lightHeld, 0.2,
+                posture, speed, visualSkill, alertMult);
+    }
+
+    // darkFloor: how much is still seen in total darkness (0.2 for zombies; humans see better in the dark).
+    public static double visualRate(double base, double dist, double range, double angle, double frontHalf,
+                                    double peripheralHalf, double exposure, double light, boolean lightHeld, double darkFloor,
+                                    int posture, double speed, double visualSkill, double alertMult) {
         if (exposure <= 0 || dist >= range) return 0;
         double angleF;
         if (angle <= frontHalf) angleF = angle < 25 && dist < 3 ? 3.0 : 1.0; // right in its face
         else if (angle <= peripheralHalf) angleF = lerp((angle - frontHalf) / (peripheralHalf - frontHalf), 0.35, 0.08);
         else return 0;
         double distF = clamp((range - dist) / (range - 2), 0, 1);
-        double lightF = lightHeld ? 1.2 : 0.2 + 0.8 * clamp(light, 0, 15) / 15;
+        double lightF = lightHeld ? 1.2 : darkFloor + (1 - darkFloor) * clamp(light, 0, 15) / 15;
         double moveF = speed < 0.01 ? 0.55 : speed < 0.1 ? 0.8 : speed < 0.24 ? 1.0 : 1.5;
         // The Sneak skill works fully while crouched or crawling and only a little while standing.
         double skillF = 1 - clamp(visualSkill, 0, 0.6) * (posture == STAND ? 0.3 : 1.0);

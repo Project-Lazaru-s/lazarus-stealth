@@ -37,15 +37,21 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
-// Per zombie-player awareness. Every target acquisition by an infected (vanilla goals, Zombie Awareness sight,
-// Dual Hitbox noise, Apocalypse Now / Undead Revamped goals) goes through Mob.setTarget, which Forge turns into
-// the cancelable LivingChangeTargetEvent: a player can only become the target once this pair is PURSUING.
+// Per mob-player awareness. Every target acquisition by an infected (vanilla goals, Zombie Awareness sight,
+// Dual Hitbox noise, Apocalypse Now / Undead Revamped goals) or by a hostile human NPC goes through Mob.setTarget,
+// which Forge turns into the cancelable LivingChangeTargetEvent: a player can only become the target once this pair
+// is PURSUING. Humans use a sharper profile, tell their allies, and leave the final attack decision to Lazarus NPCs
+// (warnings, paid passage, checkpoints): when it refuses the target, the pair stays PURSUING as "spotted" (refused)
+// until the player has been out of sight for the human memory time.
 @Mod.EventBusSubscriber(modid = LazarusStealth.ID)
 public final class Perception {
     public enum State { UNAWARE, SUSPICIOUS, INVESTIGATING, ALERTED, PURSUING }
 
     static final class Pair {
+        final UUID id;
         State state = State.UNAWARE;
+        boolean refused;
+        long lastSeen = Long.MIN_VALUE / 2;
         double suspicion;
         Vec3 lastKnown;
         long since;
@@ -53,6 +59,23 @@ public final class Perception {
         int noiseHits;
         long noiseWindow;
         String reason = "";
+
+        Pair(UUID id) {
+            this.id = id;
+        }
+    }
+
+    record Profile(boolean human, double range, double frontHalf, double periHalf, double rateMult, double darkFloor,
+                   double alertMult, int memoryTicks, int searchTicks, int searchRadius) {}
+
+    static Profile profile(Mob mob) {
+        if (human(mob)) return new Profile(true, StealthConfig.HUMAN_SIGHT_RANGE.get(), StealthConfig.HUMAN_FRONT_CONE.get() / 2,
+                StealthConfig.HUMAN_PERIPHERAL_CONE.get() / 2, StealthConfig.HUMAN_RATE_MULT.get(), StealthConfig.HUMAN_DARK_FLOOR.get(),
+                StealthConfig.HUMAN_ALERT_VISION_MULT.get(), StealthConfig.HUMAN_MEMORY_SECONDS.get() * 20,
+                StealthConfig.HUMAN_SEARCH_SECONDS.get() * 20, 8);
+        return new Profile(false, StealthConfig.SIGHT_RANGE.get(), StealthConfig.FRONT_CONE.get() / 2,
+                StealthConfig.PERIPHERAL_CONE.get() / 2, 1, 0.2, StealthConfig.ALERT_VISION_MULT.get(),
+                StealthConfig.MEMORY_SECONDS.get() * 20, StealthConfig.SEARCH_SECONDS.get() * 20, 5);
     }
 
     // Mob-level lead: where it is walking to (a noise or the last place it saw someone), then searching around.
@@ -71,7 +94,7 @@ public final class Perception {
         boolean headless;
 
         Pair pair(UUID id) {
-            return pairs.computeIfAbsent(id, k -> new Pair());
+            return pairs.computeIfAbsent(id, Pair::new);
         }
 
         boolean hasLead(long now) {
@@ -104,7 +127,16 @@ public final class Perception {
     // ---------- queries used by Noise, Finisher, SneakXp and tests ----------
 
     static boolean covered(Entity entity) {
-        return entity instanceof Mob && entity.getType().is(LazarusStealth.INFECTED);
+        return entity instanceof Mob && (entity.getType().is(LazarusStealth.INFECTED) || entity.getType().is(LazarusStealth.HUMAN));
+    }
+
+    static boolean human(Entity entity) {
+        return entity.getType().is(LazarusStealth.HUMAN);
+    }
+
+    // Infected always hunt players; a human only counts while Lazarus NPCs says it may be hostile to this player.
+    static boolean engaged(Mob mob, Player player) {
+        return !human(mob) || StealthApi.hostility().test(mob, player);
     }
 
     static boolean eligible(Player player) {
@@ -132,6 +164,28 @@ public final class Perception {
     public static Vec3 lead(Mob mob) {
         Mind m = MINDS.get(mob);
         return m == null || !m.hasLead(mob.level().getGameTime()) ? null : m.lead;
+    }
+
+    // Aware = has noticed the player and still remembers them (used by Lazarus NPCs for warnings and stalking).
+    static boolean aware(Mob mob, Player player) {
+        Mind m = MINDS.get(mob);
+        Pair p = m == null ? null : m.pairs.get(player.getUUID());
+        if (p == null) return false;
+        return p.state.ordinal() >= State.SUSPICIOUS.ordinal()
+                || mob.level().getGameTime() - p.lastSeen <= profile(mob).memoryTicks();
+    }
+
+    // Shared intelligence (a hit, an ally's call, an ambush): the mob now knows where the player is.
+    static void reveal(Mob mob, ServerPlayer player, String reason) {
+        Mind m = mind(mob);
+        Pair pair = m.pair(player.getUUID());
+        long now = mob.level().getGameTime();
+        transition(mob, pair, State.PURSUING, reason, now);
+        pair.refused = false;
+        pair.lastSeen = now;
+        pair.lastKnown = player.position();
+        pair.pursuedSinceLead = true;
+        m.clearLead();
     }
 
     // True only for a zombie with no target, no lead and no suspicion of this player (takedown condition).
@@ -170,12 +224,14 @@ public final class Perception {
 
     // ---------- target gate ----------
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    // HIGH: runs before the target rules of Lazarus NPCs, so their warnings and callouts only happen for players
+    // this mob has actually perceived (a cancelled event never reaches them).
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onChangeTarget(LivingChangeTargetEvent event) {
         if (event.isCanceled() || event.getTargetType() != LivingChangeTargetEvent.LivingTargetType.MOB_TARGET) return;
         if (!(event.getEntity() instanceof Mob mob) || mob.level().isClientSide) return;
         if (!(event.getNewTarget() instanceof ServerPlayer player)) return;
-        if (!StealthConfig.ENABLED.get() || !covered(mob) || !eligible(player)) return;
+        if (!StealthConfig.ENABLED.get() || !covered(mob) || !eligible(player) || !engaged(mob, player)) return;
         long now = mob.level().getGameTime();
         Mind m = mind(mob);
         if (headless(mob, m, now)) return; // Dual Hitbox decides for headless zombies (noise-only targeting)
@@ -208,6 +264,10 @@ public final class Perception {
     public static void onHurt(LivingHurtEvent event) {
         if (!(event.getEntity() instanceof Mob mob) || !covered(mob) || !StealthConfig.ENABLED.get()) return;
         if (!(event.getSource().getEntity() instanceof ServerPlayer player) || !eligible(player)) return;
+        if (human(mob)) {
+            reveal(mob, player, "hurt"); // Lazarus NPCs decides the retaliation; the gate now lets it through
+            return;
+        }
         Mind m = mind(mob);
         pursue(mob, m, m.pair(player.getUUID()), player, "hurt", mob.level().getGameTime());
     }
@@ -243,9 +303,9 @@ public final class Perception {
             s.threat = 0;
             return;
         }
-        double range = StealthConfig.SIGHT_RANGE.get();
+        double range = Math.max(StealthConfig.SIGHT_RANGE.get(), StealthConfig.HUMAN_SIGHT_RANGE.get());
         List<Mob> mobs = level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(range, range / 2, range),
-                m -> m.isAlive() && covered(m));
+                m -> m.isAlive() && covered(m) && engaged(m, player));
         if (mobs.size() > StealthConfig.MAX_MOBS_PER_PLAYER.get()) {
             mobs = new ArrayList<>(mobs);
             mobs.sort(Comparator.comparingDouble(m -> m.distanceToSqr(player)));
@@ -276,40 +336,44 @@ public final class Perception {
 
     // Returns the suspicion rate used this sample (for the debug line).
     static double evaluate(ServerLevel level, Mob mob, Mind m, Pair pair, ServerPlayer player, PlayerState s, double dt, long now) {
+        Profile pr = profile(mob);
         if (m.lead != null && !m.hasLead(now)) leadFinished(mob, m);
         LivingEntity target = mob.getTarget();
         if (target == player) {
             pair.state = State.PURSUING;
-            if (mob.getSensing().hasLineOfSight(player)) pair.lastKnown = player.position();
+            pair.refused = false;
+            if (mob.getSensing().hasLineOfSight(player)) {
+                pair.lastKnown = player.position();
+                pair.lastSeen = now;
+            }
             return 0;
         }
-        if (pair.state == State.PURSUING) {
+        boolean refused = pair.state == State.PURSUING && pair.refused;
+        if (pair.state == State.PURSUING && !refused) {
             // Lost (or switched) target: go to the last known position, then search; posture never clears a chase.
             transition(mob, pair, State.ALERTED, "lost target", now);
             pair.suspicion = Math.max(pair.suspicion, 0.6);
             if (target == null)
                 m.setLead(pair.lastKnown != null ? pair.lastKnown : player.position(),
-                        StealthConfig.MEMORY_SECONDS.get() * 20, 1.1, StealthMath.HIGH, player.getUUID(), now);
+                        pr.memoryTicks(), 1.1, StealthMath.HIGH, player.getUUID(), now);
         }
         if (target != null) return 0; // busy with someone else
         if (headless(mob, m, now)) {
-            decay(mob, m, pair, dt, now);
+            decay(mob, m, pair, pr, dt, now);
             return 0;
         }
         Vec3 mobEye = mob.getEyePosition();
         double dx = player.getX() - mob.getX(), dz = player.getZ() - mob.getZ();
-        if (Math.hypot(dx, dz) < StealthConfig.CONTACT_DISTANCE.get() + mob.getBbWidth() / 2
+        if (!refused && Math.hypot(dx, dz) < StealthConfig.CONTACT_DISTANCE.get() + mob.getBbWidth() / 2
                 && Math.abs(player.getY() - mob.getY()) < 1.5) {
             pursue(mob, m, pair, player, "contact", now);
             return 0;
         }
         Vec3 toPlayer = player.getEyePosition().subtract(mobEye);
         double dist = toPlayer.length();
-        double range = StealthConfig.SIGHT_RANGE.get();
         double angle = dist < 1e-3 ? 0 : Math.toDegrees(Math.acos(Mth.clamp(mob.getViewVector(1f).dot(toPlayer.scale(1 / dist)), -1, 1)));
-        double frontHalf = StealthConfig.FRONT_CONE.get() / 2, periHalf = StealthConfig.PERIPHERAL_CONE.get() / 2;
         double rate = 0;
-        if (dist < range && angle <= periHalf) {
+        if (dist < pr.range() && angle <= pr.periHalf()) {
             int posture = posture(player);
             double exposure = exposure(level, mob, mobEye, player, posture);
             if (exposure > 0) {
@@ -318,22 +382,36 @@ public final class Perception {
                         || player.getMainHandItem().is(LazarusStealth.LIGHT_SOURCES) || player.getOffhandItem().is(LazarusStealth.LIGHT_SOURCES);
                 double light = level.getMaxLocalRawBrightness(eyePos);
                 boolean alert = pair.state.ordinal() >= State.INVESTIGATING.ordinal() || m.hasLead(now);
-                rate = StealthMath.visualRate(StealthConfig.DETECTION_RATE.get(), dist, range, angle, frontHalf, periHalf,
-                        exposure, light, lit, posture, s.sampleSpeed, LazarusStealth.attr(player, LazarusStealth.VISUAL_STEALTH),
-                        alert ? StealthConfig.ALERT_VISION_MULT.get() : 1);
+                rate = StealthMath.visualRate(StealthConfig.DETECTION_RATE.get() * pr.rateMult(), dist, pr.range(), angle,
+                        pr.frontHalf(), pr.periHalf(), exposure, light, lit, pr.darkFloor(), posture, s.sampleSpeed,
+                        LazarusStealth.attr(player, LazarusStealth.VISUAL_STEALTH), alert ? pr.alertMult() : 1);
             }
         }
+        if (refused) {
+            // Spotted, but the owner mod is not attacking yet (warning, paid passage...): keep tracking while seen.
+            if (rate > 0) {
+                pair.lastSeen = now;
+                pair.lastKnown = player.position();
+            } else if (now - pair.lastSeen > pr.memoryTicks()) {
+                transition(mob, pair, State.UNAWARE, "lost sight", now);
+                pair.refused = false;
+                pair.suspicion = 0;
+            }
+            return rate;
+        }
         if (rate <= 0) {
-            decay(mob, m, pair, dt, now);
+            decay(mob, m, pair, pr, dt, now);
             return 0;
         }
         pair.suspicion = Math.min(1, pair.suspicion + rate * dt);
         pair.lastKnown = player.position();
+        pair.lastSeen = now;
         if (pair.suspicion >= 1) {
             pursue(mob, m, pair, player, "sight", now);
         } else if (pair.suspicion >= 0.6 && pair.state.ordinal() < State.INVESTIGATING.ordinal()) {
             transition(mob, pair, State.INVESTIGATING, "glimpse", now);
-            m.setLead(player.position(), StealthConfig.INVESTIGATE_SECONDS.get() * 20, 0.9, StealthMath.LOW, player.getUUID(), now);
+            m.setLead(player.position(), StealthConfig.INVESTIGATE_SECONDS.get() * 20, pr.human() ? 0.8 : 0.9,
+                    StealthMath.LOW, player.getUUID(), now);
         } else if (pair.suspicion >= 0.3 && pair.state == State.UNAWARE) {
             transition(mob, pair, State.SUSPICIOUS, "glimpse", now);
         }
@@ -344,13 +422,13 @@ public final class Perception {
         return rate;
     }
 
-    private static void decay(Mob mob, Mind m, Pair pair, double dt, long now) {
+    private static void decay(Mob mob, Mind m, Pair pair, Profile pr, double dt, long now) {
         double rate = StealthConfig.SUSPICION_DECAY.get() * (pair.state.ordinal() >= State.ALERTED.ordinal() ? 0.5 : 1);
         pair.suspicion = Math.max(0, pair.suspicion - rate * dt);
         boolean lead = m.hasLead(now);
         switch (pair.state) {
             case ALERTED -> {
-                if (!lead && now - pair.since > StealthConfig.MEMORY_SECONDS.get() * 20L)
+                if (!lead && now - pair.since > pr.memoryTicks())
                     transition(mob, pair, State.INVESTIGATING, "no clues", now);
             }
             case INVESTIGATING -> {
@@ -394,14 +472,18 @@ public final class Perception {
         if (mob.getTarget() != null) return;
         Mind m = mind(mob);
         int cls = noise.cls();
+        boolean human = human(mob);
         if (!m.hasLead(now) || cls >= m.leadClass) {
-            double speed = cls == StealthMath.LOW ? 0.9 : cls == StealthMath.MEDIUM ? 1.05 : 1.2;
+            // Humans approach a faint sound slowly and carefully, and flank a gunshot instead of walking into it.
+            double speed = cls == StealthMath.LOW ? (human ? 0.7 : 0.9) : cls == StealthMath.MEDIUM ? 1.05 : 1.2;
+            Vec3 pos = human && "gunshot".equals(noise.kind()) ? flank(mob, noise.pos()) : noise.pos();
             UUID cause = noise.source() == null ? null : noise.source().getUUID();
-            m.setLead(noise.pos(), StealthConfig.INVESTIGATE_SECONDS.get() * 20, speed, cls, cause, now);
+            m.setLead(pos, StealthConfig.INVESTIGATE_SECONDS.get() * 20, speed, cls, cause, now);
         }
         if (noise.source() == null) return;
         Pair pair = m.pair(noise.source().getUUID());
         if (pair.state == State.PURSUING) return;
+        pair.lastKnown = noise.pos(); // where it thinks the player is (shared with allies on an alert)
         if (cls >= StealthMath.HIGH) {
             transition(mob, pair, State.ALERTED, "heard " + noise.kind() + " (high)", now);
         } else if (cls == StealthMath.MEDIUM) {
@@ -419,14 +501,24 @@ public final class Perception {
         }
     }
 
+    // A point five blocks to one side of the noise, on the mob's side of it.
+    static Vec3 flank(Mob mob, Vec3 origin) {
+        Vec3 to = origin.subtract(mob.position()).multiply(1, 0, 1);
+        if (to.lengthSqr() < 1e-4) return origin;
+        Vec3 side = new Vec3(-to.z, 0, to.x).normalize().scale(mob.getRandom().nextBoolean() ? 5 : -5);
+        return origin.add(side).subtract(to.normalize().scale(2));
+    }
+
     // ---------- transitions ----------
 
     static void pursue(Mob mob, Mind m, Pair pair, ServerPlayer player, String reason, long now) {
         transition(mob, pair, State.PURSUING, reason, now);
         pair.pursuedSinceLead = true;
         pair.lastKnown = player.position();
+        pair.lastSeen = now;
         m.clearLead();
         if (mob.getTarget() != player) mob.setTarget(player);
+        pair.refused = mob.getTarget() != player; // another mod (Lazarus NPCs) declined the attack for now
     }
 
     private static void transition(Mob mob, Pair pair, State next, String reason, long now) {
@@ -434,11 +526,32 @@ public final class Perception {
             pair.since = now;
             return;
         }
+        State from = pair.state;
         if (StealthConfig.DEBUG_LOG.get())
-            LazarusStealth.LOG.info("[lazarusstealth] {} {} -> {} ({})", mob.getType().toShortString(), pair.state, next, reason);
+            LazarusStealth.LOG.info("[lazarusstealth] {} {} -> {} ({})", mob.getType().toShortString(), from, next, reason);
         pair.state = next;
         pair.since = now;
         pair.reason = reason;
+        if (!human(mob) || !(mob.level().getPlayerByUUID(pair.id) instanceof ServerPlayer player)) return;
+        StealthApi.fire(mob, player, from, next, reason);
+        if (next.ordinal() > from.ordinal() && next.ordinal() >= State.ALERTED.ordinal() && !reason.startsWith("callout"))
+            callout(mob, player, pair.lastKnown != null ? pair.lastKnown : player.position(), now);
+    }
+
+    // A human that spots or hears the player tells allies around it where it thinks the player is.
+    private static void callout(Mob mob, ServerPlayer player, Vec3 where, long now) {
+        double r = StealthConfig.HUMAN_CALLOUT_RADIUS.get();
+        if (r <= 0) return;
+        for (Mob ally : mob.level().getEntitiesOfClass(Mob.class, mob.getBoundingBox().inflate(r),
+                a -> a != mob && a.isAlive() && human(a) && a.getTarget() == null && StealthApi.allies().test(mob, a)
+                        && engaged(a, player))) {
+            Mind am = mind(ally);
+            Pair ap = am.pair(player.getUUID());
+            if (ap.state.ordinal() >= State.ALERTED.ordinal()) continue;
+            ap.lastKnown = where;
+            transition(ally, ap, State.ALERTED, "callout", now);
+            am.setLead(where, profile(ally).memoryTicks(), 1.1, StealthMath.HIGH, player.getUUID(), now);
+        }
     }
 
     // Lead finished without finding anyone: a player who caused it and was not caught earns "diverted" XP.
@@ -459,6 +572,12 @@ public final class Perception {
     public static void onJoin(EntityJoinLevelEvent event) {
         if (event.getLevel().isClientSide() || !(event.getEntity() instanceof Mob mob) || !covered(mob)) return;
         if (GOAL_ADDED.put(mob, Boolean.TRUE) != null) return;
+        if (human(mob)) {
+            // Below the Lazarus NPCs order goal (priority 0), so its tactics (cover, retreat, stalking) win.
+            // Apocalypse Now humans have no LookAtPlayerGoal, so they need no idle gaze.
+            mob.goalSelector.addGoal(1, new InvestigateGoal(mob));
+            return;
+        }
         mob.goalSelector.addGoal(0, new InvestigateGoal(mob));
         mob.goalSelector.addGoal(0, new IdleGazeGoal(mob));
     }
@@ -551,15 +670,17 @@ public final class Perception {
                 }
                 return;
             }
+            Profile pr = profile(mob);
             if (!m.arrived && mob.position().distanceToSqr(m.lead) < 4) {
                 m.arrived = true;
-                m.searchUntil = now + StealthConfig.SEARCH_SECONDS.get() * 20L;
+                m.searchUntil = now + pr.searchTicks();
                 searchPoint = null;
             }
             if (m.arrived) {
                 if (now >= nextRepath && (searchPoint == null || mob.getNavigation().isDone())) {
                     var r = mob.getRandom();
-                    searchPoint = m.lead.add(r.nextInt(11) - 5, 0, r.nextInt(11) - 5);
+                    int rad = pr.searchRadius();
+                    searchPoint = m.lead.add(r.nextInt(2 * rad + 1) - rad, 0, r.nextInt(2 * rad + 1) - rad);
                     mob.getNavigation().moveTo(searchPoint.x, searchPoint.y, searchPoint.z, 0.7);
                     nextRepath = now + 40 + r.nextInt(40);
                 }
@@ -572,7 +693,7 @@ public final class Perception {
                 if (mob.getNavigation().isDone() || end == null || end.distToCenterSqr(m.lead) > 36) {
                     if (!mob.getNavigation().moveTo(m.lead.x, m.lead.y, m.lead.z, m.leadSpeed) && ++failedPaths >= 3) {
                         m.arrived = true; // unreachable: search where it stands
-                        m.searchUntil = now + StealthConfig.SEARCH_SECONDS.get() * 20L;
+                        m.searchUntil = now + pr.searchTicks();
                     }
                 }
             }

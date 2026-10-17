@@ -32,6 +32,7 @@ public final class LazarusStealth {
 
     // Entities that use stealth perception; blocks by footstep class; items for takedowns and held light.
     public static final TagKey<EntityType<?>> INFECTED = TagKey.create(Registries.ENTITY_TYPE, rl("infected"));
+    public static final TagKey<EntityType<?>> HUMAN = TagKey.create(Registries.ENTITY_TYPE, rl("human"));
     public static final TagKey<EntityType<?>> FINISHER_SPECIAL = TagKey.create(Registries.ENTITY_TYPE, rl("finisher_special"));
     public static final TagKey<EntityType<?>> FINISHER_IMMUNE = TagKey.create(Registries.ENTITY_TYPE, rl("finisher_immune"));
     public static final TagKey<EntityType<?>> NO_VISION = TagKey.create(Registries.ENTITY_TYPE, rl("no_vision"));

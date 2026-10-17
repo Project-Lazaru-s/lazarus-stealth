@@ -56,6 +56,7 @@ dependencies {
     runtimeOnly fg.deobf("blank:lazarusmoodles:1.15.1")
     runtimeOnly fg.deobf("blank:apocalypsenow:3.0.5")
     runtimeOnly fg.deobf("blank:curios:5.14.1")
+    runtimeOnly fg.deobf("blank:lazarusnpcs:1.1.0")
 }
 
 tasks.named('processResources', ProcessResources).configure {

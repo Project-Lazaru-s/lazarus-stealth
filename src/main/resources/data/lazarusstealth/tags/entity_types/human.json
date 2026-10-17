@@ -1,0 +1,89 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "apocalypsenow:survivor_1",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:survivor_2",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:survivor_3",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:survivor_4",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:survivor_5",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:survivor_6",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:survivor_7",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:survivor_8",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:survivor_9",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:survivor_10",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:military_01",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:military_02",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:military_medic",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:soldiers",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:soldiers_02",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:cannibal",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:looter_1",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:looter_2",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:looter_3",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:looter_4",
+      "required": false
+    },
+    {
+      "id": "apocalypsenow:looter_5",
+      "required": false
+    }
+  ]
+}

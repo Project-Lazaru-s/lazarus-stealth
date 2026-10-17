@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 — 2026-10-17
+
+- **Perfil humano** (tag `lazarusstealth:human`, seção `[human]` do config). Os NPCs humanos hostis veem até 40 blocos, com cone de 140° e periferia de 240°, detectam 1,5× mais rápido, enxergam melhor no escuro e lembram da última posição por 20 s. Também se aproximam devagar de ruídos baixos e flanqueiam tiros.
+- Comunicação de grupo: quem vê ou ouve o jogador alerta os aliados num raio de 16 blocos.
+- Alvo recusado por outro mod (aviso, pedágio, posto): o NPC continua "sabendo" do jogador enquanto o vê, sem caçá-lo.
+- O bloqueio de alvo passou para prioridade HIGH, então outros mods só veem tentativas de alvo de quem já percebeu o jogador.
+- Nova API pública `StealthApi`: hostilidade, aliados, consciência, revelação e eventos de mudança de estado.
+- Testes: 7 novos GameTests com o Lazarus NPCs. Cada teste agora limpa os mobs e jogadores deixados pelos anteriores.
+
 ## 0.1.2 — 2026-10-17
 
 - Tiro com silenciador passa a ser ruído **Baixo** (antes Alto): zumbis até 16 blocos só investigam o ponto do tiro.

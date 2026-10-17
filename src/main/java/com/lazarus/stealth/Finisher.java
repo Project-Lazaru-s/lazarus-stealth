@@ -53,7 +53,7 @@ public final class Finisher {
     // Null when the takedown is allowed, otherwise the reason (shown by /lazarusstealth debug and used by tests).
     static String check(ServerPlayer player, Mob mob) {
         if (!StealthConfig.ENABLED.get() || !StealthConfig.FINISHER_ENABLED.get()) return "disabled";
-        if (!Perception.covered(mob) || mob.getType().is(LazarusStealth.FINISHER_IMMUNE)) return "not eligible";
+        if (!Perception.covered(mob) || Perception.human(mob) || mob.getType().is(LazarusStealth.FINISHER_IMMUNE)) return "not eligible";
         if (!weapon(player.getMainHandItem())) return "weapon";
         if (player.getAttackStrengthScale(0.5f) < StealthConfig.FINISHER_CHARGE.get()) return "charge";
         if (!Perception.unawareOf(mob, player)) return "noticed";

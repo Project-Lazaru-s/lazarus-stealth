@@ -35,6 +35,37 @@ Paredes entre o som e o zumbi reduzem o alcance a 60%. No máximo 10 infectados 
 
 **Zumbis sem cabeça** (Dual Hitbox) não usam a visão do mod: continuam guiados só por ruído, pela regra do próprio Dual Hitbox.
 
+## NPCs humanos (com Lazarus NPCs 1.1.0)
+
+Os humanos do Apocalypse Now que **podem ser hostis a você** usam um perfil de percepção próprio, mais esperto que o dos zumbis:
+
+- saqueadores, soldados desertores e canibais (exceto quem você pagou ou quem se rendeu);
+- militares e sobreviventes das facções com quem você está em inimizade (reputação ≤ −40) ou que estão com rancor de você.
+
+Caçadores e NPCs amistosos ou contratados não usam o perfil: continuam como antes e não "investigam" os seus passos.
+
+| Parâmetro | Zumbi | Humano |
+|---|---|---|
+| Alcance de visão | 24 blocos | 40 |
+| Cone frontal / periferia | 110° / 200° | 140° / 240° |
+| Velocidade de detecção | 1× | 1,5× |
+| Escuridão total | vê 20% | vê 35% |
+| Em alerta | 2,5× mais rápido | 3× mais rápido |
+| Memória da última posição | 6 s | 20 s |
+| Busca | 8 s, raio 5 | 20 s, raio 8 |
+| Ruído baixo | anda até o ponto | se aproxima devagar |
+| Tiro ouvido | vai até o ponto | flanqueia: vai a um ponto 5 blocos ao lado |
+
+- **Avisos só depois de ver você.** O aviso dos saqueadores ("larga a comida…"), a vigia, o posto dos soldados e a varredura de alvos só acontecem depois que o NPC percebe você. Antes, o aviso saía assim que o objetivo de alvo original via o jogador, mesmo pelas costas.
+- **Visto, mas sem ataque.** Quando o Lazarus NPCs segura o ataque (prazo do aviso, pedágio pago, fora do posto), o NPC continua sabendo de você enquanto o vê, e esquece 20 s depois de perder você de vista.
+- **Comunicação:** quem vê ou ouve você alerta os aliados num raio de 16 blocos (mesmo grupo ou mesma facção) e passa a posição.
+- **Canibais** precisam encontrar a presa antes de persegui-la, e a perdem se você ficar escondido tempo suficiente. Durante a emboscada eles sabem onde você está.
+- **Falas:** os NPCs comentam o que perceberam ("Hm? Something moved over there.", "Did you hear that?", "There! Over there!", "Lost them…", "Must have been nothing."), com uma fala a cada 8 s por NPC. Os canibais ficam calados.
+- Atacar um NPC escondido revela você para ele e para o grupo, e a retaliação do Lazarus NPCs funciona normalmente.
+- **Finalização furtiva** ainda não vale em humanos (planejada para a próxima versão).
+
+Os valores ficam na seção `[human]` do `lazarusstealth-server.toml`. A integração usa a API pública `StealthApi` (hostilidade, aliados, consciência, revelação e eventos de estado); sem o Lazarus NPCs, a tag `lazarusstealth:human` trata todos os humanos dela como hostis.
+
 ## Ruído
 
 O ruído é gerado no servidor, a cada 1,6 bloco andado no chão, a partir do bloco sob os pés:
@@ -144,7 +175,7 @@ O protocolo já envia um estado agregado (**Investigando / Perseguindo**) para u
 - `serverconfig/lazarusstealth-server.toml` (por mundo; mundos novos copiam de `defaultconfigs/`): cones, alcance, ritmo de detecção, memória, alcances de cada superfície e ação, finalização e XP.
 - `config/lazarusstealth-client.toml`: indicador ligado ou desligado, sempre visível e posição.
 - **Tags de dados**, para incluir blocos e mobs de outros mods sem mexer no código:
-  - entidades: `lazarusstealth:infected`, `finisher_special`, `finisher_immune`, `no_vision`;
+  - entidades: `lazarusstealth:infected`, `human`, `finisher_special`, `finisher_immune`, `no_vision`;
   - blocos: `surface_soft`, `surface_metal`, `surface_glass`, `see_through`;
   - itens: `finisher_weapons`, `light_sources`.
 
@@ -160,6 +191,7 @@ O protocolo já envia um estado agregado (**Investigando / Perseguindo**) para u
 | **PeakStamina 2.2.2** | Lê e gasta `StaminaCapability.stamina`. |
 | **Encumbered 0.99** | `WeightEvent.calculateWeight` ÷ `getWeightWithBoostItem(player, 1)` (capacidade efetiva com itens de bônus e encantamento). |
 | **Lazarus Moodles 1.15.1** | Nova API pública `LazarusMoodlesApi.exhaustionLevel`, com o nível efetivo, inclusive a abstinência de sedativos. |
+| **Lazarus NPCs 1.1.0** | Perfil humano: o Lazarus NPCs informa quem pode ser hostil e quem é aliado, consulta `StealthApi.aware` antes de avisar ou caçar, e usa `StealthApi.reveal` antes de dar alvo de propósito (retaliação, chamado do grupo, emboscada). |
 | **Apocalypse Now, Undead Revamped, The Hordes, vanilla** | Cobertos pela tag `infected`. As hordas do The Hordes continuam rastreando o jogador por conta própria (é um evento) e precisam vê-lo ou tocá-lo para atacar. |
 
 Sem algum desses mods, o Lazarus Stealth usa valores neutros e registra um aviso uma única vez. Nenhum JAR de terceiros foi alterado. A IA dos infectados ganha só dois objetivos novos, e somente nos mobs com a tag `infected`: investigar uma pista e olhar ao redor sem virar a cabeça para jogadores que ainda não percebeu (o `LookAtPlayerGoal` vanilla viraria a cabeça para quem está atrás).
@@ -176,7 +208,7 @@ Sem algum desses mods, o Lazarus Stealth usa valores neutros e registra um aviso
 
 ```
 ./gradlew build --offline               # compila e roda StealthMathTest (equilíbrio, com asserts)
-./gradlew runGameTestServer --offline   # 21 GameTests no mundo, com os JARs do pack em libs/
+./gradlew runGameTestServer --offline   # 28 GameTests no mundo, com os JARs do pack (inclusive Lazarus NPCs) em libs/
 ```
 
 - `libs/` recebe cópias locais dos JARs do perfil (TaCZ para compilar; os demais só no runtime dos testes) e não é versionada.

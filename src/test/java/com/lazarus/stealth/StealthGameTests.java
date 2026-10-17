@@ -37,6 +37,7 @@ public final class StealthGameTests {
     // 1. High Sneak, crouched, on grass: passing 2.5 blocks behind an unaware zombie is possible.
     @GameTest(template = "arena", batch = "pass_behind", timeoutTicks = 200)
     public static void skilledCrouchPassesBehind(GameTestHelper h) {
+        TestArena.fresh(h);
         floor(h, Blocks.GRASS_BLOCK);
         Husk husk = frozenHusk(h, 16, 16);
         ServerPlayer p = player(h, 11, 13);
@@ -53,6 +54,7 @@ public final class StealthGameTests {
     // 1b. Same pass standing, walking, without skills and in front-side view: discovered.
     @GameTest(template = "arena", batch = "pass_seen", timeoutTicks = 200)
     public static void unskilledStandingPassIsSeen(GameTestHelper h) {
+        TestArena.fresh(h);
         floor(h, Blocks.GRASS_BLOCK);
         Husk husk = frozenHusk(h, 16, 12);
         ServerPlayer p = player(h, 11, 15);
@@ -66,6 +68,7 @@ public final class StealthGameTests {
     // 2. Standing still in front: discovered over time, not instantly.
     @GameTest(template = "arena", batch = "front_detect", timeoutTicks = 140)
     public static void frontStandingIsDiscoveredGradually(GameTestHelper h) {
+        TestArena.fresh(h);
         Husk husk = frozenHusk(h, 16, 10);
         ServerPlayer p = player(h, 16, 16);
         h.runAtTickTime(4, () -> h.assertTrue(husk.getTarget() == null, "discovered instantly"));
@@ -78,6 +81,7 @@ public final class StealthGameTests {
     // 3. Gate: a direct setTarget (Dual Hitbox noise, Zombie Awareness sight) is refused while unaware.
     @GameTest(template = "arena", batch = "gate", timeoutTicks = 40)
     public static void directSetTargetIsRefusedWhileUnaware(GameTestHelper h) {
+        TestArena.fresh(h);
         Husk husk = frozenHusk(h, 16, 16);
         ServerPlayer p = player(h, 16, 6);
         p.setGameMode(GameType.SURVIVAL);
@@ -89,6 +93,7 @@ public final class StealthGameTests {
     // 4. Crouching does not erase a chase.
     @GameTest(template = "arena", batch = "chase_persist", timeoutTicks = 120)
     public static void crouchDoesNotClearChase(GameTestHelper h) {
+        TestArena.fresh(h);
         Husk husk = frozenHusk(h, 16, 16);
         husk.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
         ServerPlayer p = player(h, 16, 18);
@@ -108,6 +113,7 @@ public final class StealthGameTests {
     // 5. A low noise sends the zombie to the noise position without revealing the player.
     @GameTest(template = "arena", batch = "noise_lead", timeoutTicks = 200)
     public static void lowNoiseLeadsToPositionNotPlayer(GameTestHelper h) {
+        TestArena.fresh(h);
         Husk husk = h.spawn(EntityType.HUSK, 8, FLOOR, 16);
         husk.goalSelector.removeAllGoals(g -> g instanceof RandomStrollGoal);
         ServerPlayer p = player(h, 28, 28);
@@ -127,6 +133,7 @@ public final class StealthGameTests {
     // 5b. A loud noise from a hidden survival player alerts, still without a target.
     @GameTest(template = "arena", batch = "noise_high", timeoutTicks = 60)
     public static void highNoiseAlertsWithoutTarget(GameTestHelper h) {
+        TestArena.fresh(h);
         for (int x = 4; x < 28; x++) for (int y = 0; y < 4; y++) h.setBlock(x, FLOOR + y, 22, Blocks.STONE);
         Husk husk = h.spawn(EntityType.HUSK, 16, FLOOR, 12);
         ServerPlayer p = player(h, 16, 26);
@@ -141,6 +148,7 @@ public final class StealthGameTests {
     // 6. Surfaces: metal and glass louder than grass; glass stays High even crouched.
     @GameTest(template = "arena", batch = "surfaces", timeoutTicks = 20)
     public static void surfacesChangeFootstepNoise(GameTestHelper h) {
+        TestArena.fresh(h);
         h.setBlock(4, FLOOR - 1, 4, Blocks.GRASS_BLOCK);
         h.setBlock(8, FLOOR - 1, 4, Blocks.IRON_BLOCK);
         h.setBlock(12, FLOOR - 1, 4, Blocks.GLASS);
@@ -160,6 +168,7 @@ public final class StealthGameTests {
     // 7. Forced crawl under a one-block ceiling is read as crawling (real pose, not the key).
     @GameTest(template = "arena", batch = "crawl_gap", timeoutTicks = 40)
     public static void oneBlockGapForcesCrawl(GameTestHelper h) {
+        TestArena.fresh(h);
         h.setBlock(10, FLOOR + 1, 10, Blocks.STONE);
         ServerPlayer p = player(h, 10, 10);
         h.onEachTick(p::doTick);
@@ -172,6 +181,7 @@ public final class StealthGameTests {
     // 8. Takedown on an unaware common zombie: lethal, credited to the player, counted in statistics.
     @GameTest(template = "arena", batch = "finisher_kill", timeoutTicks = 60)
     public static void takedownKillsUnawareZombie(GameTestHelper h) {
+        TestArena.fresh(h);
         Husk husk = frozenHusk(h, 16, 16);
         ServerPlayer p = player(h, 16, 14);
         crouch(p);
@@ -192,6 +202,7 @@ public final class StealthGameTests {
     // 8b. No takedown on a zombie that is investigating.
     @GameTest(template = "arena", batch = "finisher_noticed", timeoutTicks = 60)
     public static void noTakedownWhenInvestigating(GameTestHelper h) {
+        TestArena.fresh(h);
         Husk husk = frozenHusk(h, 16, 16);
         husk.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
         ServerPlayer p = player(h, 16, 14);
@@ -212,6 +223,7 @@ public final class StealthGameTests {
     // 8c. Specials (more than 40 max health or tagged) take a heavy hit but do not die outright.
     @GameTest(template = "arena", batch = "finisher_special", timeoutTicks = 60)
     public static void specialTakesCriticalNotDeath(GameTestHelper h) {
+        TestArena.fresh(h);
         // Not a husk: Dual Hitbox (on the dev runtime) moves Zombie-class damage to its own head/body pools.
         @SuppressWarnings("unchecked")
         EntityType<net.minecraft.world.entity.Mob> walker = (EntityType<net.minecraft.world.entity.Mob>)
@@ -238,13 +250,14 @@ public final class StealthGameTests {
     // 9. Multiplayer: the noisy player in plain view is chased, the skilled one crouched behind is not.
     @GameTest(template = "arena", batch = "two_players", timeoutTicks = 140)
     public static void perceptionIsPerPlayer(GameTestHelper h) {
+        TestArena.fresh(h);
         Husk husk = frozenHusk(h, 16, 12);
         ServerPlayer loud = player(h, 16, 17);
         ServerPlayer quiet = player(h, 16, 9);
         skills(quiet, 0.3, 0.4);
         crouch(quiet);
         h.runAtTickTime(120, () -> {
-            h.assertTrue(husk.getTarget() == loud, "visible player not chased");
+            h.assertTrue(husk.getTarget() == loud, "visible player not chased: target=" + husk.getTarget() + " loud=" + Perception.state(husk, loud) + "/" + Perception.suspicion(husk, loud) + " " + Perception.reason(husk, loud) + " quiet=" + Perception.state(husk, quiet));
             h.assertTrue(Perception.state(husk, quiet) != Perception.State.PURSUING, "hidden player was also discovered");
             finish(h, loud);
             remove(h, quiet);
@@ -254,6 +267,8 @@ public final class StealthGameTests {
     // 10. Sneak XP: real evasion pays, the same zombie and the same area stop paying, daily cap holds.
     @GameTest(template = "arena", batch = "xp", timeoutTicks = 400)
     public static void evasionXpWithAntiFarm(GameTestHelper h) {
+        TestArena.fresh(h);
+        StealthConfig.DEBUG_LOG.set(true);
         floor(h, Blocks.GRASS_BLOCK);
         Husk husk = frozenHusk(h, 16, 16);
         ServerPlayer p = player(h, 11, 13);
@@ -263,6 +278,7 @@ public final class StealthGameTests {
         h.runAtTickTime(170, () -> teleport(h, p, new Vec3(28.5, FLOOR, 26.5)));
         h.runAtTickTime(200, () -> {
             PlayerState s = PlayerState.of(p);
+            StealthConfig.DEBUG_LOG.set(false);
             h.assertTrue(s.xpToday == SneakXp.CLOSE_EVASION_XP, "evasion XP " + s.xpToday);
             h.assertTrue(SneakXp.reward(p, s, husk, 4) == 0, "same zombie paid twice");
             Husk other = h.spawn(EntityType.HUSK, 16, FLOOR, 16); // same 16x16 area as the first reward
@@ -280,6 +296,7 @@ public final class StealthGameTests {
     // 11. Cost: 80 infected around two players, average perception cost per player sample.
     @GameTest(template = "arena", batch = "perf", timeoutTicks = 260)
     public static void perceptionCostStaysSmall(GameTestHelper h) {
+        TestArena.fresh(h);
         List<Husk> husks = new ArrayList<>();
         for (int i = 0; i < 80; i++) husks.add(h.spawn(EntityType.HUSK, 2 + (i % 10) * 3, FLOOR, 2 + (i / 10) * 3 + 2));
         ServerPlayer a = player(h, 15, 15);
@@ -360,6 +377,7 @@ public final class StealthGameTests {
 
     private static void finish(GameTestHelper h, ServerPlayer p) {
         remove(h, p);
+        h.killAllEntities(); // leftovers would see, hear and group with the next tests
         h.succeed();
     }
 }

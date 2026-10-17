@@ -15,6 +15,10 @@ public final class StealthConfig {
     public static DoubleValue SIGHT_RANGE, FRONT_CONE, PERIPHERAL_CONE, DETECTION_RATE, SUSPICION_DECAY,
             CONTACT_DISTANCE, ALERT_VISION_MULT;
     public static IntValue MEMORY_SECONDS, SEARCH_SECONDS, INVESTIGATE_SECONDS;
+    // Human NPC profile (Apocalypse Now humans that may be hostile, see Lazarus NPCs)
+    public static DoubleValue HUMAN_SIGHT_RANGE, HUMAN_FRONT_CONE, HUMAN_PERIPHERAL_CONE, HUMAN_RATE_MULT, HUMAN_DARK_FLOOR,
+            HUMAN_ALERT_VISION_MULT, HUMAN_CALLOUT_RADIUS;
+    public static IntValue HUMAN_MEMORY_SECONDS, HUMAN_SEARCH_SECONDS;
     // Noise
     public static DoubleValue SOFT_RADIUS, MEDIUM_RADIUS, METAL_RADIUS, GLASS_RADIUS, CROUCH_GAIT, CRAWL_GAIT,
             SPRINT_GAIT, BREAK_RADIUS, GLASS_BREAK_RADIUS, MELEE_RADIUS, DOOR_RADIUS, CONTAINER_RADIUS,
@@ -49,6 +53,19 @@ public final class StealthConfig {
         MEMORY_SECONDS = b.comment("After losing its target, seconds spent going to the last known position.").defineInRange("memorySeconds", 6, 1, 60);
         SEARCH_SECONDS = b.comment("Seconds of local search after arriving at a lead.").defineInRange("searchSeconds", 8, 1, 60);
         INVESTIGATE_SECONDS = b.comment("Seconds a noise lead stays valid.").defineInRange("investigateSeconds", 15, 2, 120);
+        b.pop();
+
+        b.comment("Smarter perception for human NPCs (#lazarusstealth:human). Only humans that may be hostile to the",
+                "player use it (decided by Lazarus NPCs: looters, rogue soldiers, cannibals, faction enemies).").push("human");
+        HUMAN_SIGHT_RANGE = b.defineInRange("sightRange", 40.0, 4, 96);
+        HUMAN_FRONT_CONE = b.defineInRange("frontConeDegrees", 140.0, 30, 180);
+        HUMAN_PERIPHERAL_CONE = b.defineInRange("peripheralConeDegrees", 240.0, 60, 360);
+        HUMAN_RATE_MULT = b.comment("Multiplier on perception.detectionRate.").defineInRange("detectionMultiplier", 1.5, 0.1, 10);
+        HUMAN_DARK_FLOOR = b.comment("Fraction still seen in total darkness (zombies: 0.2).").defineInRange("darknessFloor", 0.35, 0, 1);
+        HUMAN_ALERT_VISION_MULT = b.defineInRange("alertVisionMultiplier", 3.0, 1, 10);
+        HUMAN_MEMORY_SECONDS = b.comment("Seconds a human remembers where it last saw the player.").defineInRange("memorySeconds", 20, 1, 300);
+        HUMAN_SEARCH_SECONDS = b.defineInRange("searchSeconds", 20, 1, 300);
+        HUMAN_CALLOUT_RADIUS = b.comment("Allies within this radius are told where the player is when one spots or hears them.").defineInRange("calloutRadius", 16.0, 0, 64);
         b.pop();
 
         b.push("noise");
