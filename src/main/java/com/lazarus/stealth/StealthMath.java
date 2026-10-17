@@ -3,9 +3,10 @@ package com.lazarus.stealth;
 // Balance formulas with primitive inputs only, so StealthMathTest can check them without a game.
 public final class StealthMath {
     public static final int STAND = 0, CROUCH = 1, CRAWL = 2;
-    public static final int NONE = 0, LOW = 1, MEDIUM = 2, HIGH = 3;
+    public static final int NONE = 0, LOW = 1, MEDIUM = 2, HIGH = 3, EXTREME = 4;
     // Noise radius (blocks) at which each class starts; below LOW_RADIUS nothing is emitted.
-    public static final double LOW_RADIUS = 1.5, MEDIUM_RADIUS = 6, HIGH_RADIUS = 14;
+    // EXTREME is above anything a body can make (footsteps cap at 2.5x the loudest surface = 35): gunshots.
+    public static final double LOW_RADIUS = 1.5, MEDIUM_RADIUS = 6, HIGH_RADIUS = 14, EXTREME_RADIUS = 40;
     private static final double[] POSTURE_VISIBILITY = {1.0, 0.5, 0.3};
 
     private StealthMath() {}
@@ -54,7 +55,7 @@ public final class StealthMath {
     }
 
     public static int noiseClass(double radius) {
-        return radius < LOW_RADIUS ? NONE : radius < MEDIUM_RADIUS ? LOW : radius < HIGH_RADIUS ? MEDIUM : HIGH;
+        return radius < LOW_RADIUS ? NONE : radius < MEDIUM_RADIUS ? LOW : radius < HIGH_RADIUS ? MEDIUM : radius < EXTREME_RADIUS ? HIGH : EXTREME;
     }
 
     // What the HUD shows: the last class for holdTicks, then one class less every stepTicks.

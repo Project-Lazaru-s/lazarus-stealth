@@ -46,14 +46,14 @@ O ruído é gerado no servidor, a cada 1,6 bloco andado no chão, a partir do bl
 | Metal (`surface_metal`: ferro, cobre, grades, chapas, dutos do Apocalypse Now, ferro do Immersive Weathering) | 12 (Médio) | 20,4 (Alto) | 4,8 (Baixo) | 3,6 (Baixo) |
 | Vidro (`surface_glass`: vidro, painéis, `glass_spikes`) | 14 (Alto) | 23,8 (Alto) | 14 (Alto) | 14 (Alto) |
 
-Valores em blocos de alcance. Classes: abaixo de 1,5 = **Nenhum** (nada é emitido), até 6 = **Baixo**, até 14 = **Médio**, 14 ou mais = **Alto**.
+Valores em blocos de alcance. Classes: abaixo de 1,5 = **Nenhum** (nada é emitido), até 6 = **Baixo**, até 14 = **Médio**, até 40 = **Alto**, 40 ou mais = **Extremo**. Nenhum passo chega a Extremo (o teto dos passos é 2,5× a superfície mais alta, 35 blocos): esse nível é dos tiros.
 
 Outras ações:
 
 - **Sem desconto de postura nem de habilidade:**
   - quebrar um bloco: 14 (o mesmo alcance do Dual Hitbox);
   - quebrar vidro: 18;
-  - tiro do TaCZ: 64, ou 16 com silenciador (sempre **Alto** no indicador; o chamado dos zumbis continua com o script `lazarus_gunshot_noise.js`).
+  - tiro do TaCZ: 64 (**Extremo**), ou 16 com silenciador (**Alto**); o chamado dos zumbis continua com o script `lazarus_gunshot_noise.js`.
 - **Pela metade se você estiver agachado:**
   - portas, alçapões e portões: 6;
   - abrir contêiner: 4;
@@ -128,9 +128,9 @@ O XP entra pelo mesmo comando usado pelas outras árvores do Lazarus (`puffish_s
 
 ## Indicador de ruído
 
-Três barrinhas no canto inferior direito, acima do HUD de munição do TaCZ e fora da coluna de moodles: **Nenhum** (contorno), **Baixo** (1, verde), **Médio** (2, laranja), **Alto** (3, vermelho). Dá para ler sem depender da cor. O nome aparece por 2,5 s quando muda.
+Um alto-falante no canto inferior esquerdo, logo acima da linha da hotbar, com 0 a 4 ondas: **Nenhum**, **Baixo**, **Médio**, **Alto** e **Extremo** (só tiros sem silenciador). Dá para ler pela quantidade de ondas, sem depender da cor. O ícone é semitransparente e some 3 s depois do último ruído, a não ser que `alwaysShowNoiseIndicator` esteja ligado. A posição pode ser ajustada com `offsetLeft` e `offsetBottom` no `lazarusstealth-client.toml`.
 
-O indicador mostra o último ruído que **você** fez e seu decaimento. Ele não mede luz, cheiro de sangue nem o quanto você está visível. Some depois de 3 s em silêncio, ou fica sempre visível com `alwaysShowNoiseIndicator`.
+O indicador mostra o último ruído que **você** fez e seu decaimento (um nível a cada segundo, depois de 1,5 s). Ele não mede luz, cheiro de sangue nem o quanto você está visível.
 
 O protocolo já envia um estado agregado (**Investigando / Perseguindo**) para um indicador de ameaça separado, previsto para uma versão futura e ainda não desenhado.
 
@@ -155,7 +155,7 @@ O protocolo já envia um estado agregado (**Investigando / Perseguindo**) para u
 | **Zombie Awareness 1.13.1** | Seu alvo por visão (16 blocos, linha de visão sem cone) passa por `Mob.setTarget` → `LivingChangeTargetEvent`, que o mod recusa enquanto o par não está Perseguindo. Também é desfeito o caminho até o jogador que o ZA inicia logo antes de dar o alvo. Som, cheiro, luz e hordas errantes do ZA continuam. Nenhuma configuração do ZA foi alterada. |
 | **Dual Hitbox Zombies 1.0.0** | A atração por barulho (`setTarget(player)` ao quebrar blocos ou lutar) é recusada e substituída por uma pista até o ponto do som. Zumbis sem cabeça ficam com a regra do próprio DHZ. A finalização usa `ZombieCombatEvents.applyHeadDamage`. Isca e jarra de cérebro (que só limpam o alvo) não são afetadas. |
 | **Smart Moving Reborn 1.0.0** | A postura vem do estado real no servidor: o SMR põe o jogador em `Pose.SWIMMING` ao rastejar, inclusive no rastejar forçado em vãos de 1 bloco. Agachar vem de `Pose.CROUCHING`. A tecla não é lida. |
-| **TaCZ 1.1.8** | `GunFireEvent`: tiro sempre **Alto** no indicador e infectados no alcance (64 ou 16) entram em Alerta com pista no ponto do tiro. O script `lazarus_gunshot_noise.js` continua dono do chamado, e caminhos que já terminam perto do tiro são mantidos. |
+| **TaCZ 1.1.8** | `GunFireEvent`: tiro **Extremo** no indicador (**Alto** com silenciador) e infectados no alcance (64 ou 16) entram em Alerta com pista no ponto do tiro. O script `lazarus_gunshot_noise.js` continua dono do chamado, e caminhos que já terminam perto do tiro são mantidos. |
 | **Puffish Skills 0.19.2** | Categoria `furtividade`, atributos como recompensa e XP por comando. |
 | **PeakStamina 2.2.2** | Lê e gasta `StaminaCapability.stamina`. |
 | **Encumbered 0.99** | `WeightEvent.calculateWeight` ÷ `getWeightWithBoostItem(player, 1)` (capacidade efetiva com itens de bônus e encantamento). |

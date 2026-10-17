@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-// TaCZ shots are always High noise for the shooter's HUD and alert nearby infected to the shot position.
+// TaCZ shots: Extreme noise when unsilenced (64), High when silenced (16); both alert nearby infected to the shot.
 // Ranges mirror kubejs lazarus_gunshot_noise.js (64 / 16 silenced), which keeps sending zombies there; our
 // investigate goal keeps any path that already ends near the shot, so the two do not fight.
 // Registered only when TaCZ is loaded.

@@ -149,7 +149,7 @@ public final class IntegrationGameTests {
         finish(h, p);
     }
 
-    // TaCZ: a real GunFireEvent (unsilenced) is High noise on the HUD and alerts infected in range, never a target.
+    // TaCZ: a real GunFireEvent (unsilenced) is Extreme noise on the HUD and alerts infected in range, never a target.
     @GameTest(template = "arena", batch = "int_tacz", timeoutTicks = 40)
     public static void gunshotIsHighNoiseAndAlerts(GameTestHelper h) {
         for (int x = 4; x < 28; x++) for (int y = 0; y < 4; y++) h.setBlock(x, FLOOR + y, 20, Blocks.STONE);
@@ -159,7 +159,7 @@ public final class IntegrationGameTests {
                 new com.tacz.guns.api.event.common.GunFireEvent(p, ItemStack.EMPTY, net.minecraftforge.fml.LogicalSide.SERVER)));
         h.runAtTickTime(6, () -> {
             PlayerState s = PlayerState.of(p);
-            h.assertTrue(s.lastNoiseClass == StealthMath.HIGH, "shot not High on the HUD: " + s.lastNoiseClass);
+            h.assertTrue(s.lastNoiseClass == StealthMath.EXTREME, "shot not Extreme on the HUD: " + s.lastNoiseClass);
             h.assertTrue(Perception.state(husk, p) == Perception.State.ALERTED, "shot did not alert: " + Perception.state(husk, p));
             h.assertTrue(husk.getTarget() == null, "shot gave a target");
             finish(h, p);

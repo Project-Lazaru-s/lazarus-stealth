@@ -3,7 +3,7 @@
   "lazarusstealth.noise.0": "Nenhum",
   "lazarusstealth.noise.1": "Baixo",
   "lazarusstealth.noise.2": "Médio",
-  "lazarusstealth.noise.3": "Alto",
+  "lazarusstealth.noise.4":"Extremo","lazarusstealth.noise.3": "Alto",
   "lazarusstealth.finisher.success": "Finalização furtiva",
   "lazarusstealth.finisher.special": "Golpe furtivo crítico",
   "attribute.name.lazarusstealth.footstep_reduction": "Passos silenciosos",

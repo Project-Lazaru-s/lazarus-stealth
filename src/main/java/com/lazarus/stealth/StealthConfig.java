@@ -93,12 +93,12 @@ public final class StealthConfig {
         SERVER_SPEC = b.build();
 
         ForgeConfigSpec.Builder c = new ForgeConfigSpec.Builder();
-        c.comment("Noise indicator: shows the noise YOU make (None/Low/Medium/High).",
+        c.comment("Noise indicator: shows the noise YOU make (None/Low/Medium/High/Extreme).",
                 "It does not measure light, blood scent or how visible you are.").push("hud");
         HUD_ENABLED = c.define("showNoiseIndicator", true);
         HUD_ALWAYS = c.comment("Keep the indicator visible even while silent.").define("alwaysShowNoiseIndicator", false);
-        HUD_X = c.comment("Offset from the right edge (pixels).").defineInRange("offsetRight", 28, 0, 4000);
-        HUD_Y = c.comment("Offset from the bottom edge (pixels).").defineInRange("offsetBottom", 82, 0, 4000);
+        HUD_X = c.comment("Distance from the left edge to the icon (GUI pixels).").defineInRange("offsetLeft", 14, 0, 4000);
+        HUD_Y = c.comment("Distance from the bottom edge to the top of the icon (GUI pixels).").defineInRange("offsetBottom", 50, 16, 4000);
         c.pop();
         CLIENT_SPEC = c.build();
     }
