@@ -6,7 +6,7 @@
   <img alt="Minecraft 1.20.1" src="https://img.shields.io/badge/Minecraft-1.20.1-3c8527">
   <img alt="Forge 47.x" src="https://img.shields.io/badge/Forge-47.x-dd7d2b">
   <img alt="Java 17" src="https://img.shields.io/badge/Java-17-b07219">
-  <img alt="Versão 0.2.0" src="https://img.shields.io/badge/vers%C3%A3o-0.2.0-6b5b3e">
+  <img alt="Versão 0.2.1" src="https://img.shields.io/badge/vers%C3%A3o-0.2.1-6b5b3e">
 </p>
 
 # Lazarus Stealth
@@ -123,9 +123,11 @@ O ruído dos passos é gerado no servidor a cada 1,6 bloco andado no chão, a pa
 | Superfície (tag) | Andando | Correndo | Agachado | Rastejando |
 |---|---|---|---|---|
 | Macia (`surface_soft`: grama, terra, folhas, lã, areia, neve) | 5 (Baixo) | 8,5 (Médio) | 2 (Baixo) | 1,5 (Baixo) |
-| Comum (sem tag: madeira, pedra, concreto, asfalto) | 8 (Médio) | 13,6 (Médio) | 3,2 (Baixo) | 2,4 (Baixo) |
+| Comum (sem tag: madeira, pedra, concreto, asfalto) | 8 (Médio) | 14 (Alto) | 3,2 (Baixo) | 2,4 (Baixo) |
 | Metal (`surface_metal`: ferro, cobre, grades, chapas, dutos do Apocalypse Now, ferro do Immersive Weathering) | 12 (Médio) | 20,4 (Alto) | 4,8 (Baixo) | 3,6 (Baixo) |
 | Vidro (`surface_glass`: vidro, painéis, `glass_spikes`) | 14 (Alto) | 23,8 (Alto) | 14 (Alto) | 14 (Alto) |
+
+Correr faz sempre **exatamente uma classe a mais** que andar no mesmo chão, com a mesma carga e as mesmas habilidades (0.2.1). O multiplicador de corrida (1,7) decide o alcance dentro dessa classe. A única exceção é quando andar já é **Alto** (vidro): correr continua Alto, porque **Extremo** é reservado a tiros.
 
 Os valores são o alcance em blocos. As classes são:
 
@@ -288,7 +290,7 @@ Todas as integrações são opcionais. Sem um mod, a parte dele fica neutra:
 
 ### Jogadores e servidores
 
-1. Baixe [`lazarusstealth-0.2.0.jar`](dist/lazarusstealth-0.2.0.jar) e coloque na pasta `mods` do perfil. No CurseForge, clique com o botão direito no perfil e escolha **Open Folder**.
+1. Baixe [`lazarusstealth-0.2.1.jar`](dist/lazarusstealth-0.2.1.jar) e coloque na pasta `mods` do perfil. No CurseForge, clique com o botão direito no perfil e escolha **Open Folder**.
 2. Em multiplayer, instale a **mesma versão** no servidor e em todos os clientes.
 3. Para a árvore Furtividade:
    - copie [`extras/puffish_skills/categories/furtividade/`](extras/puffish_skills/categories/furtividade) para `config/puffish_skills/categories/`;
@@ -351,7 +353,7 @@ Verificado no bytecode e nos testes com os JARs do Project Lazarus, não presumi
 - **Dual Hitbox Zombies 1.0.0:** ao quebrar blocos ou lutar, chama `setTarget(player)` nos zumbis próximos. Isso é recusado e vira uma pista até o ponto do som. Ele também cancela todo dano comum nos seus zumbis e usa reservas de cabeça e de corpo; por isso a finalização usa `ZombieCombatEvents.applyHeadDamage`. Zumbis sem cabeça ficam com a regra do próprio Dual Hitbox.
 - **Vanilla:** o `LookAtPlayerGoal` vira a cabeça do zumbi para qualquer jogador a até 8 blocos com linha de visão, mesmo atrás dele. Nos infectados, o Lazarus Stealth troca esse olhar por um olhar ao redor sem preferência por jogadores.
 - **Smart Moving Reborn 1.0.0:** ao rastejar, inclusive no rastejar forçado em vãos de 1 bloco, põe o jogador em `Pose.SWIMMING` no servidor. A postura vem daí, não da tecla.
-- **TaCZ 1.1.8:** o `GunFireEvent` dá o tiro e o silenciador. O chamado dos zumbis continua com o script `lazarus_gunshot_noise.js` do modpack, e caminhos que já terminam perto do tiro são mantidos.
+- **TaCZ 1.1.8:** o `GunFireEvent` dá o tiro e o silenciador. O Stealth é o único dono do chamado: o tiro vira pista para até `maxMobsPerNoise` infectados no raio, com oclusão por paredes (o antigo script `lazarus_gunshot_noise.js` do modpack foi aposentado).
 - **PeakStamina 2.2.2:** o fôlego fica em `StaminaCapability.stamina`.
 - **Encumbered 0.99:** a carga é `WeightEvent.calculateWeight` dividido por `getWeightWithBoostItem(player, 1)`, a capacidade efetiva com itens de bônus e encantamento.
 - **Lazarus Moodles 1.15.1:** `LazarusMoodlesApi.exhaustionLevel` devolve o nível efetivo de Exaustão, inclusive a abstinência de sedativos.

@@ -62,6 +62,18 @@ public final class StealthMathTest {
         assert displayedClass(HIGH, 31, 30, 20) == MEDIUM;
         assert displayedClass(HIGH, 75, 30, 20) == NONE;
         assert displayedClass(EXTREME, 31, 30, 20) == HIGH;
+        // Sprint = walk + 1 class on every surface and with skills/load; never EXTREME (glass stays HIGH)
+        double[] walks = {footstepRadius(5, 1, false, 0, 0, 0, 0), footstepRadius(8, 1, false, 0, 0, 0, 0),
+                footstepRadius(12, 1, false, 0, 0, 0, 0), footstepRadius(8, 1, false, 0, 0, 0.45, 0),
+                footstepRadius(8, 1, false, 1.0, 5, 0, 0), footstepRadius(5, 1, false, 0, 0, 0.6, 0), 2.0, 5.99, 6.0, 13.99};
+        for (double walk : walks) {
+            int expected = Math.min(HIGH, noiseClass(walk) + 1);
+            assert noiseClass(sprintRadius(walk, 1.7)) == expected : "walk " + walk + " sprint " + sprintRadius(walk, 1.7);
+        }
+        assert noiseClass(8) == MEDIUM && noiseClass(sprintRadius(8, 1.7)) == HIGH : "concrete: the reported bug";
+        assert sprintRadius(14, 1.7) == 14 * 1.7 && noiseClass(sprintRadius(14, 1.7)) == HIGH : "glass sprint stays HIGH";
+        assert sprintRadius(5, 1.7) == 8.5 : "inside the next class the multiplier still decides the radius";
+        assert noiseClass(sprintRadius(footstepRadius(14, 1, true, 1.0, 5, 0, 0), 1.7)) == HIGH : "heavy, tired on glass: still not a gunshot";
         System.out.println("StealthMathTest OK");
     }
 }

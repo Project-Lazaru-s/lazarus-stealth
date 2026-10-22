@@ -98,15 +98,17 @@ public final class Noise {
         boolean[] glass = new boolean[1];
         double base = surfaceRadius(level, player, glass);
         int posture = Perception.posture(player);
+        boolean sprint = posture == StealthMath.STAND && player.isSprinting();
         double gait = posture == StealthMath.CRAWL ? StealthConfig.CRAWL_GAIT.get()
-                : posture == StealthMath.CROUCH ? StealthConfig.CROUCH_GAIT.get()
-                : player.isSprinting() ? StealthConfig.SPRINT_GAIT.get() : 1.0;
+                : posture == StealthMath.CROUCH ? StealthConfig.CROUCH_GAIT.get() : 1.0;
         double burden = LazarusStealth.attr(player, LazarusStealth.BURDEN_CONTROL);
         // Leitura de Rotas also softens the extra radius of metal and glass (by half the burden control).
         if (base > StealthConfig.MEDIUM_RADIUS.get())
             base = StealthConfig.MEDIUM_RADIUS.get() + (base - StealthConfig.MEDIUM_RADIUS.get()) * (1 - burden * 0.5);
-        return StealthMath.footstepRadius(base, gait, glass[0], s.loadFraction, s.exhaustion,
+        double radius = StealthMath.footstepRadius(base, gait, glass[0], s.loadFraction, s.exhaustion,
                 LazarusStealth.attr(player, LazarusStealth.FOOTSTEP_REDUCTION), burden);
+        // Sprinting is always one noise class above walking the same ground with the same load and skills.
+        return sprint ? StealthMath.sprintRadius(radius, StealthConfig.SPRINT_GAIT.get()) : radius;
     }
 
     @SubscribeEvent

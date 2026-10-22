@@ -62,6 +62,31 @@ public final class StealthMath {
         return surfaceBase * mult;
     }
 
+    /**
+     * Sprinting footsteps: exactly one noise class above the same steps walked. The sprint multiplier sets where in
+     * that class the radius falls; it is clamped into the class so the HUD and hearing always tell the gaits apart.
+     * Footsteps never reach EXTREME (reserved for gunshots), so a walk that is already HIGH (glass) stays HIGH.
+     */
+    public static double sprintRadius(double walkRadius, double sprintGait) {
+        int walk = noiseClass(walkRadius);
+        int target = Math.min(HIGH, walk + 1);
+        if (target <= walk) // already HIGH: louder, but never EXTREME
+            return Math.min(walkRadius * Math.max(1, sprintGait), Math.nextDown(EXTREME_RADIUS));
+        double low = classStart(target), high = classStart(target + 1);
+        return clamp(walkRadius * sprintGait, low, Math.nextDown(high));
+    }
+
+    /** Radius at which a class starts (NONE starts at 0, EXTREME at EXTREME_RADIUS). */
+    static double classStart(int cls) {
+        return switch (cls) {
+            case NONE -> 0;
+            case LOW -> LOW_RADIUS;
+            case MEDIUM -> MEDIUM_RADIUS;
+            case HIGH -> HIGH_RADIUS;
+            default -> EXTREME_RADIUS;
+        };
+    }
+
     public static int noiseClass(double radius) {
         return radius < LOW_RADIUS ? NONE : radius < MEDIUM_RADIUS ? LOW : radius < HIGH_RADIUS ? MEDIUM : radius < EXTREME_RADIUS ? HIGH : EXTREME;
     }
