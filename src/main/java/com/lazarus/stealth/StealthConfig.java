@@ -82,7 +82,7 @@ public final class StealthConfig {
         DOOR_RADIUS = b.comment("Opening/closing doors, trapdoors and gates (halved while crouching).").defineInRange("doorRadius", 6.0, 0, 64);
         CONTAINER_RADIUS = b.comment("Opening a container (halved while crouching).").defineInRange("containerRadius", 4.0, 0, 64);
         PICKUP_RADIUS = b.comment("Picking up items (halved while crouching).").defineInRange("pickupRadius", 2.0, 0, 64);
-        LOUD_GUN_RADIUS = b.comment("TaCZ shot, only for the HUD/alert state; attraction stays with kubejs lazarus_gunshot_noise.js.").defineInRange("loudGunRadius", 64.0, 0, 256);
+        LOUD_GUN_RADIUS = b.comment("TaCZ shot radius (unsilenced); infected within it investigate the shot (occlusion and maxMobsPerNoise apply).").defineInRange("loudGunRadius", 64.0, 0, 256);
         SILENCED_GUN_RADIUS = b.defineInRange("silencedGunRadius", 16.0, 0, 256);
         OCCLUSION = b.comment("Radius multiplier when a solid block lies between the noise and the zombie.").defineInRange("occlusionMultiplier", 0.6, 0.1, 1);
         MAX_MOBS_PER_NOISE = b.comment("Nearest infected that react to one noise.").defineInRange("maxMobsPerNoise", 10, 1, 64);

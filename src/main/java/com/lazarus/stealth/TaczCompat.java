@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // TaCZ shots: unsilenced = Extreme (64 blocks, alerts); silenced = Low (16 blocks, infected only investigate the spot).
-// Ranges mirror kubejs lazarus_gunshot_noise.js (64 / 16 silenced), which keeps sending zombies there; our
-// investigate goal keeps any path that already ends near the shot, so the two do not fight.
+// This is the only owner of gunshot attraction (the old kubejs lazarus_gunshot_noise.js was retired 2026-10-18):
+// Noise.emit routes the shot to the nearest infected (occlusion + maxMobsPerNoise), as a lead, never a target.
 // Registered only when TaCZ is loaded.
 final class TaczCompat {
     private TaczCompat() {}
