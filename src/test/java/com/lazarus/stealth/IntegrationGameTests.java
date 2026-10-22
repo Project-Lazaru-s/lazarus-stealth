@@ -21,6 +21,7 @@ import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
 import java.util.UUID;
 
 // Runs with the pack's real JARs on the dev runtime (build.gradle runtimeOnly): Zombie Awareness + CoroUtil,
@@ -169,6 +170,33 @@ public final class IntegrationGameTests {
             h.assertTrue(Perception.state(husk, p) == Perception.State.ALERTED, "shot did not alert: " + Perception.state(husk, p));
             h.assertTrue(husk.getTarget() == null, "shot gave a target");
             finish(h, p);
+        });
+    }
+
+    // Voice: the level VoiceNoise records from Simple Voice Chat becomes one noise on the server thread.
+    @GameTest(template = "arena", batch = "int_voice", timeoutTicks = 40)
+    public static void voiceLevelsMakeNoise(GameTestHelper h) {
+        TestArena.fresh(h);
+        Husk husk = h.spawn(EntityType.HUSK, 16, FLOOR, 8);
+        husk.goalSelector.removeAllGoals(g -> g instanceof RandomStrollGoal);
+        ServerPlayer talker = player(h, 16, 16), whisperer = player(h, 4, 28), mumbler = player(h, 28, 28);
+        h.runAtTickTime(2, () -> {
+            VoiceLevels.record(talker.getUUID(), -25, false);
+            VoiceLevels.record(whisperer.getUUID(), -10, true);
+            VoiceLevels.record(mumbler.getUUID(), -60, false);
+            for (ServerPlayer p : List.of(talker, whisperer, mumbler)) Noise.voice(p, p.position());
+            h.assertTrue(PlayerState.of(talker).lastNoiseClass == StealthMath.MEDIUM, "speech not Medium: " + PlayerState.of(talker).lastNoiseClass);
+            h.assertTrue(PlayerState.of(whisperer).lastNoiseClass == StealthMath.LOW, "whisper not Low: " + PlayerState.of(whisperer).lastNoiseClass);
+            h.assertTrue(PlayerState.of(mumbler).lastNoiseClass == StealthMath.NONE, "quiet mic made noise: " + PlayerState.of(mumbler).lastNoiseClass);
+            h.assertTrue(VoiceLevels.take(talker.getUUID()) == null, "voice level not consumed");
+        });
+        h.runAtTickTime(6, () -> {
+            h.assertTrue(Perception.state(husk, talker).ordinal() >= Perception.State.INVESTIGATING.ordinal(),
+                    "husk did not hear the talker: " + Perception.state(husk, talker));
+            h.assertTrue(husk.getTarget() == null, "speech gave a target");
+            h.getLevel().getServer().getPlayerList().remove(whisperer);
+            h.getLevel().getServer().getPlayerList().remove(mumbler);
+            finish(h, talker);
         });
     }
 

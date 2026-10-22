@@ -45,6 +45,8 @@ dependencies {
     // TaCZ GunFireEvent: optional at runtime, the hook is only registered when TaCZ is loaded.
     compileOnly fg.deobf("blank:tacz:1.1.8")
     testCompileOnly fg.deobf("blank:tacz:1.1.8")
+    // Simple Voice Chat API: optional at runtime, VoiceNoise is only loaded by the voice chat mod itself.
+    compileOnly fg.deobf("blank:voicechat:2.6.22")
     // The pack's JARs, only for the integration GameTests (dev runtime; never compiled against or packaged).
     runtimeOnly fg.deobf("blank:tacz:1.1.8")
     runtimeOnly fg.deobf("blank:zombieawareness:1.13.1")

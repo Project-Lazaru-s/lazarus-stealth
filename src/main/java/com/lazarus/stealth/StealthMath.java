@@ -87,6 +87,26 @@ public final class StealthMath {
         };
     }
 
+    /** Loudness of a 16-bit PCM frame in dBFS (RMS; 0 is a full-scale square wave, silence is -96). */
+    public static double voiceDb(short[] pcm) {
+        if (pcm == null || pcm.length == 0) return -96;
+        double sum = 0;
+        for (short sample : pcm) sum += (double) sample * sample;
+        double rms = Math.sqrt(sum / pcm.length) / 32768.0;
+        return rms <= 0 ? -96 : Math.max(-96, 20 * Math.log10(rms));
+    }
+
+    /**
+     * Noise radius of a talking player from the loudest frame of a moment: nothing under {@code quiet}, then low,
+     * medium (from {@code normal}) and high (from {@code loud}); whispering is always the whisper radius.
+     */
+    public static double voiceRadius(double db, boolean whisper, double quiet, double normal, double loud,
+                                     double low, double medium, double high, double whisperRadius) {
+        if (db < quiet) return 0;
+        if (whisper) return whisperRadius;
+        return db >= loud ? high : db >= normal ? medium : low;
+    }
+
     public static int noiseClass(double radius) {
         return radius < LOW_RADIUS ? NONE : radius < MEDIUM_RADIUS ? LOW : radius < HIGH_RADIUS ? MEDIUM : radius < EXTREME_RADIUS ? HIGH : EXTREME;
     }

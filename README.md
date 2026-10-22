@@ -6,7 +6,7 @@
   <img alt="Minecraft 1.20.1" src="https://img.shields.io/badge/Minecraft-1.20.1-3c8527">
   <img alt="Forge 47.x" src="https://img.shields.io/badge/Forge-47.x-dd7d2b">
   <img alt="Java 17" src="https://img.shields.io/badge/Java-17-b07219">
-  <img alt="Versão 0.2.1" src="https://img.shields.io/badge/vers%C3%A3o-0.2.1-6b5b3e">
+  <img alt="Versão 0.3.0" src="https://img.shields.io/badge/vers%C3%A3o-0.3.0-6b5b3e">
 </p>
 
 # Lazarus Stealth
@@ -22,6 +22,7 @@ O mod não altera nenhum JAR de terceiros nem troca a IA dos mobs. Ele controla 
 - [Como os infectados percebem você](#como-os-infectados-percebem-você)
 - [NPCs humanos](#npcs-humanos)
 - [Ruído](#ruído)
+- [Voz](#voz)
 - [Peso e exaustão](#peso-e-exaustão)
 - [Finalização furtiva](#finalização-furtiva)
 - [Árvore Furtividade](#árvore-furtividade)
@@ -158,6 +159,22 @@ Tiros e quebra de blocos não recebem desconto de postura nem de habilidade.
 
 ---
 
+## Voz
+
+Com o **Simple Voice Chat** instalado (0.3.0), falar no microfone faz barulho. O servidor mede o volume de cada pacote de voz e, a cada meio segundo, o momento mais alto vira um ruído na posição do jogador:
+
+| Volume do microfone | Alcance |
+|---|---|
+| abaixo de -45 dBFS | nada (respiração, ruído de fundo) |
+| de -45 a -30 dBFS: falando baixo | 4, **Baixo** |
+| de -30 a -18 dBFS: falando normal | 10, **Médio** |
+| -18 dBFS ou mais: gritando | 18, **Alto** |
+| sussurro (tecla de sussurro do Voice Chat) | 2,5, **Baixo**, por mais alto que seja |
+
+O volume é o RMS do áudio já decodificado, o mesmo que o servidor recebe; o ganho do microfone no Voice Chat muda o resultado. Os infectados no alcance investigam o ponto da voz, como qualquer outro ruído. A voz aparece no indicador de ruído. Sem o Simple Voice Chat, nada muda.
+
+---
+
 ## Peso e exaustão
 
 Carga e cansaço aumentam o alcance dos passos e da respiração. Os valores vêm do **Encumbered** (fração da capacidade efetiva) e do **Lazarus Moodles** (nível efetivo de Exaustão) e são lidos uma vez por segundo, não a cada passo.
@@ -253,7 +270,7 @@ O protocolo já envia o estado agregado de ameaça (**Investigando / Perseguindo
 
 **Arquivos de configuração**
 
-- `serverconfig/lazarusstealth-server.toml` (por mundo; mundos novos copiam de `defaultconfigs/`): cones, alcances, ritmo de detecção, memória, perfil `[human]`, alcances de cada superfície e ação, finalização e XP.
+- `serverconfig/lazarusstealth-server.toml` (por mundo; mundos novos copiam de `defaultconfigs/`): cones, alcances, ritmo de detecção, memória, perfil `[human]`, alcances de cada superfície e ação, voz (`[voice]`: `enabled`, limiares `quietDb`/`normalDb`/`loudDb` e alcances), finalização e XP.
 - `config/lazarusstealth-client.toml`: o indicador; dá para desligar, deixar sempre visível (`alwaysShowNoiseIndicator`) e mudar a posição (`offsetLeft`, `offsetBottom`).
 
 **Tags de dados**, para incluir blocos e mobs de outros mods sem mexer no código:
@@ -285,12 +302,13 @@ Todas as integrações são opcionais. Sem um mod, a parte dele fica neutra:
 
 - **Lazarus Moodles 1.15.1** ou superior (exaustão);
 - **Lazarus NPCs 1.1.0** ou superior (NPCs humanos);
+- **Simple Voice Chat 2.6** (voz);
 - **TaCZ** (tiros), **Puffish Skills** (árvore), **PeakStamina** (fôlego da finalização) e **Encumbered** (peso);
 - **Zombie Awareness**, **Dual Hitbox Zombies** e **Smart Moving Reborn**.
 
 ### Jogadores e servidores
 
-1. Baixe [`lazarusstealth-0.2.1.jar`](dist/lazarusstealth-0.2.1.jar) e coloque na pasta `mods` do perfil. No CurseForge, clique com o botão direito no perfil e escolha **Open Folder**.
+1. Baixe [`lazarusstealth-0.3.0.jar`](dist/lazarusstealth-0.3.0.jar) e coloque na pasta `mods` do perfil. No CurseForge, clique com o botão direito no perfil e escolha **Open Folder**.
 2. Em multiplayer, instale a **mesma versão** no servidor e em todos os clientes.
 3. Para a árvore Furtividade:
    - copie [`extras/puffish_skills/categories/furtividade/`](extras/puffish_skills/categories/furtividade) para `config/puffish_skills/categories/`;
@@ -354,6 +372,7 @@ Verificado no bytecode e nos testes com os JARs do Project Lazarus, não presumi
 - **Vanilla:** o `LookAtPlayerGoal` vira a cabeça do zumbi para qualquer jogador a até 8 blocos com linha de visão, mesmo atrás dele. Nos infectados, o Lazarus Stealth troca esse olhar por um olhar ao redor sem preferência por jogadores.
 - **Smart Moving Reborn 1.0.0:** ao rastejar, inclusive no rastejar forçado em vãos de 1 bloco, põe o jogador em `Pose.SWIMMING` no servidor. A postura vem daí, não da tecla.
 - **TaCZ 1.1.8:** o `GunFireEvent` dá o tiro e o silenciador. O Stealth é o único dono do chamado: o tiro vira pista para até `maxMobsPerNoise` infectados no raio, com oclusão por paredes (o antigo script `lazarus_gunshot_noise.js` do modpack foi aposentado).
+- **Simple Voice Chat 2.6.22:** o plugin (`@ForgeVoicechatPlugin`) recebe cada `MicrophonePacketEvent` na thread de rede do Voice Chat, decodifica o Opus com um decodificador por jogador e só guarda o volume; o ruído é emitido na thread do servidor. O sussurro vem de `isWhispering()`.
 - **PeakStamina 2.2.2:** o fôlego fica em `StaminaCapability.stamina`.
 - **Encumbered 0.99:** a carga é `WeightEvent.calculateWeight` dividido por `getWeightWithBoostItem(player, 1)`, a capacidade efetiva com itens de bônus e encantamento.
 - **Lazarus Moodles 1.15.1:** `LazarusMoodlesApi.exhaustionLevel` devolve o nível efetivo de Exaustão, inclusive a abstinência de sedativos.

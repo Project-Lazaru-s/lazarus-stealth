@@ -129,6 +129,7 @@ public final class Noise {
             }
         }
         s.lastTickPos = pos;
+        if (player.tickCount % VOICE_TICKS == 0) voice(player, pos);
         // Heavy breathing when very exhausted and standing still.
         if (counts && s.exhaustion >= 4 && s.sampleSpeed < 0.01 && now - s.lastBreath >= 80) {
             s.lastBreath = now;
@@ -136,6 +137,19 @@ public final class Noise {
             emit(player, pos, (s.exhaustion >= 5 ? 4.0 : 2.5) * (1 - burden * 0.5), "breathing");
         }
         if (now % 5 == 0) syncHud(player, s, now);
+    }
+
+    /** Every half second: the loudest thing the player said since the last check becomes one noise. */
+    static final int VOICE_TICKS = 10;
+
+    static void voice(ServerPlayer player, Vec3 pos) {
+        VoiceLevels.Heard heard = VoiceLevels.take(player.getUUID());
+        if (heard == null || !StealthConfig.VOICE_ENABLED.get() || !Perception.eligible(player)) return;
+        double radius = StealthMath.voiceRadius(heard.db(), heard.whisper(), StealthConfig.VOICE_QUIET_DB.get(),
+                StealthConfig.VOICE_NORMAL_DB.get(), StealthConfig.VOICE_LOUD_DB.get(), StealthConfig.VOICE_LOW_RADIUS.get(),
+                StealthConfig.VOICE_MEDIUM_RADIUS.get(), StealthConfig.VOICE_HIGH_RADIUS.get(),
+                StealthConfig.VOICE_WHISPER_RADIUS.get());
+        if (radius > 0) emit(player, pos, radius, "voice");
     }
 
     private static void syncHud(ServerPlayer player, PlayerState s, long now) {

@@ -24,6 +24,10 @@ public final class StealthConfig {
             SPRINT_GAIT, BREAK_RADIUS, GLASS_BREAK_RADIUS, MELEE_RADIUS, DOOR_RADIUS, CONTAINER_RADIUS,
             PICKUP_RADIUS, OCCLUSION, LOUD_GUN_RADIUS, SILENCED_GUN_RADIUS;
     public static IntValue MAX_MOBS_PER_NOISE;
+    // Voice (Simple Voice Chat)
+    public static BooleanValue VOICE_ENABLED;
+    public static DoubleValue VOICE_QUIET_DB, VOICE_NORMAL_DB, VOICE_LOUD_DB, VOICE_LOW_RADIUS, VOICE_MEDIUM_RADIUS,
+            VOICE_HIGH_RADIUS, VOICE_WHISPER_RADIUS;
     // Finisher
     public static BooleanValue FINISHER_ENABLED;
     public static DoubleValue FINISHER_STAMINA, FINISHER_MIN_ANGLE, FINISHER_MASTERY_ANGLE, SPECIAL_CRIT_FRACTION,
@@ -86,6 +90,18 @@ public final class StealthConfig {
         SILENCED_GUN_RADIUS = b.defineInRange("silencedGunRadius", 16.0, 0, 256);
         OCCLUSION = b.comment("Radius multiplier when a solid block lies between the noise and the zombie.").defineInRange("occlusionMultiplier", 0.6, 0.1, 1);
         MAX_MOBS_PER_NOISE = b.comment("Nearest infected that react to one noise.").defineInRange("maxMobsPerNoise", 10, 1, 64);
+        b.pop();
+
+        b.push("voice");
+        VOICE_ENABLED = b.comment("Talking in Simple Voice Chat makes noise: infected near a talking player investigate.",
+                "The loudest moment of each half second sets the noise; whispering is always quiet.").define("enabled", true);
+        VOICE_QUIET_DB = b.comment("Microphone level (dBFS, 0 = clipping) below which talking makes no noise.").defineInRange("quietDb", -45.0, -90, 0);
+        VOICE_NORMAL_DB = b.comment("Level from which talking is normal speech (Medium noise).").defineInRange("normalDb", -30.0, -90, 0);
+        VOICE_LOUD_DB = b.comment("Level from which talking is shouting (High noise).").defineInRange("loudDb", -18.0, -90, 0);
+        VOICE_LOW_RADIUS = b.comment("Radius for quiet talking (Low).").defineInRange("lowRadius", 4.0, 0, 64);
+        VOICE_MEDIUM_RADIUS = b.comment("Radius for normal speech (Medium).").defineInRange("mediumRadius", 10.0, 0, 64);
+        VOICE_HIGH_RADIUS = b.comment("Radius for shouting (High).").defineInRange("highRadius", 18.0, 0, 64);
+        VOICE_WHISPER_RADIUS = b.comment("Radius while whispering (Simple Voice Chat whisper key), however loud.").defineInRange("whisperRadius", 2.5, 0, 64);
         b.pop();
 
         b.push("finisher");

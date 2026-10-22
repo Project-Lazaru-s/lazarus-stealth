@@ -74,6 +74,20 @@ public final class StealthMathTest {
         assert sprintRadius(14, 1.7) == 14 * 1.7 && noiseClass(sprintRadius(14, 1.7)) == HIGH : "glass sprint stays HIGH";
         assert sprintRadius(5, 1.7) == 8.5 : "inside the next class the multiplier still decides the radius";
         assert noiseClass(sprintRadius(footstepRadius(14, 1, true, 1.0, 5, 0, 0), 1.7)) == HIGH : "heavy, tired on glass: still not a gunshot";
+        // Voice: RMS level of a frame, then the noise of the loudest moment
+        assert voiceDb(new short[960]) == -96 : "silence";
+        short[] full = new short[960];
+        for (int i = 0; i < full.length; i++) full[i] = (short) (i % 2 == 0 ? 32767 : -32767);
+        assert Math.abs(voiceDb(full)) < 0.01 : "full-scale square is 0 dBFS: " + voiceDb(full);
+        short[] tenth = new short[960];
+        for (int i = 0; i < tenth.length; i++) tenth[i] = (short) (i % 2 == 0 ? 3277 : -3277);
+        assert Math.abs(voiceDb(tenth) + 20) < 0.05 : "a tenth of full scale is -20 dBFS: " + voiceDb(tenth);
+        assert voiceRadius(-50, false, -45, -30, -18, 4, 10, 18, 2.5) == 0 : "too quiet";
+        assert noiseClass(voiceRadius(-40, false, -45, -30, -18, 4, 10, 18, 2.5)) == LOW;
+        assert noiseClass(voiceRadius(-25, false, -45, -30, -18, 4, 10, 18, 2.5)) == MEDIUM;
+        assert noiseClass(voiceRadius(-10, false, -45, -30, -18, 4, 10, 18, 2.5)) == HIGH : "shouting";
+        assert voiceRadius(-10, true, -45, -30, -18, 4, 10, 18, 2.5) == 2.5 : "whispering is quiet however loud";
+        assert voiceRadius(-60, true, -45, -30, -18, 4, 10, 18, 2.5) == 0 : "a silent whisper makes nothing";
         System.out.println("StealthMathTest OK");
     }
 }
